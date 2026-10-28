@@ -4,7 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Coxe Client — Minecraft 1.21.11 Fabric · 1.8.9 Forge · CraftRise</title>
-<meta name="description" content="Coxe is a lightweight Minecraft client. Mod for 1.21.11 (Fabric) and 1.8.9 (Forge), External for 1.20 → 1.21.11 with CraftRise support. Opens with Right Shift." />
+<meta property="og:title" content="Coxe — Minecraft client for 1.21.11 / 1.8.9 / CraftRise" />
+<meta property="og:description" content="56 modules, HUD editor, one config code. Mod for Fabric 1.21.11 and Forge 1.8.9, or the exe builds for 1.20 – 1.21.11 and CraftRise." />
+<meta property="og:image" content="img/og.jpg" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="description" content="Coxe is a lightweight Minecraft client. Internal for 1.21.11 (Fabric), 1.8.9 (Forge) or the Windows loader; External for 1.20 → 1.21.11 with CraftRise support. Opens with Right Shift." />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230f1319'/%3E%3Cpath d='M12 4C8.7 4 6.2 6.5 6.2 9.8V18l2-1.5 1.8 1.5 2-1.5 2 1.5 1.8-1.5 2 1.5V9.8C17.8 6.5 15.3 4 12 4Z' fill='%23fff'/%3E%3Crect x='9.2' y='9.6' width='1.9' height='2.6' rx='.5' fill='%230f1319'/%3E%3Crect x='12.9' y='9.6' width='1.9' height='2.6' rx='.5' fill='%230f1319'/%3E%3C/svg%3E" />
 <style>
 /* ============ tokens ============ */
@@ -264,10 +269,10 @@ h2{font-size:clamp(23px,2.8vw,31px);font-weight:800}
 .bcard h4{font-size:14.5px;font-weight:800}
 .bcard .sub{font:600 10px/1.4 var(--mono);color:var(--dim);margin-top:3px;letter-spacing:.05em}
 .bcard ul{list-style:none;border-top:1px solid var(--line);margin-bottom:14px}
-.bcard li{display:flex;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:12px}
-.bcard li span:first-child{color:var(--dim);font-weight:600}
-.bcard li span:last-child{margin-left:auto;font-weight:700;text-align:right}
-.bcard li .ok{color:var(--ok)}
+.bcard ul li{display:flex;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:12px}
+.bcard ul li span:first-child{color:var(--dim);font-weight:600}
+.bcard ul li span:last-child{margin-left:auto;font-weight:700;text-align:right}
+.bcard ul li .ok{color:var(--ok)}
 .bcard .btn{margin-top:auto}
 
 /* download options */
@@ -548,6 +553,391 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
   #elList .elrow{transition:background .14s}
   #hudCode{white-space:pre-wrap;word-break:break-all;height:54px;resize:vertical;line-height:1.4;font-size:11px}
   @media (max-width:1000px){#elList{max-height:216px}.hudstage2{min-height:300px}}
+
+  /* build groups */
+  .bgroup{margin-top:22px}
+  .bgroup:first-of-type{margin-top:6px}
+  .bgh{display:flex;align-items:center;gap:10px;margin:0 0 12px;flex-wrap:wrap}
+  .bgh h3{font-size:15px;font-weight:800;letter-spacing:-.2px}
+  .bgh .k{font:700 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+    padding:6px 9px;border-radius:6px;border:1px solid var(--line2);color:var(--muted);background:var(--panel)}
+  .bgh .k.int{background:#eef3ff;border-color:#cfdcff;color:#2563eb}
+  .bgh .k.ext{background:#fff5e6;border-color:#ffe2bd;color:#a86500}
+  .bgh p{margin-left:auto;font-size:11.5px;color:var(--dim)}
+  .builds.two{grid-template-columns:repeat(2,1fr)}
+  .onlyline{margin-top:18px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+    padding:16px 18px;display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+  .onlyline .lead{max-width:260px}
+  .onlyline h4{font-size:13px;font-weight:800;margin-bottom:4px}
+  .onlyline .lead p{font-size:11.5px;color:var(--muted);line-height:1.6}
+  .onlyline .chips2{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:250px;align-content:flex-start}
+  .onlyline .chips2 span{font:600 10.5px/1 var(--mono);padding:7px 9px;border-radius:6px;
+    border:1px solid var(--line2);color:var(--text);background:var(--bg)}
+  .onlyline .chips2 span.because{font-family:var(--font);font-weight:600;border:0;background:transparent;
+    color:var(--dim);padding:7px 0}
+  html[data-theme=dark] .bgh .k.int{background:#16233d;border-color:#243a63;color:#8ab0ff}
+  html[data-theme=dark] .bgh .k.ext{background:#2b2114;border-color:#4a3a1e;color:#e0b070}
+  @media (max-width:900px){.builds.two{grid-template-columns:1fr}.bgh p{margin-left:0}}
+
+  /* ============================================================
+     POLISH LAYER — typography, rhythm, cards, hero
+     ============================================================ */
+  body{font-size:15.5px;letter-spacing:-.005em}
+  .wrap{max-width:1200px;padding:0 28px}
+
+  /* header / nav */
+  header{backdrop-filter:saturate(1.4) blur(12px)}
+  .nav{gap:2px}
+  .nav a{padding:8px 11px;border-radius:8px;font-size:13px;font-weight:600;color:var(--mut);
+    transition:background .16s,color .16s}
+  .nav a:hover{background:var(--paper2);color:var(--ink)}
+  .nav a.active{background:var(--accent-soft);color:var(--accent)}
+  .nav a[data-studio-link]{color:var(--accent);font-weight:700}
+  .nav a[data-studio-link]:hover{background:var(--accent-soft)}
+
+  /* rhythm */
+  section{padding:76px 0}
+  .band{background:linear-gradient(180deg,var(--paper),var(--bg) 78%)}
+  .sec-head{max-width:720px;margin-bottom:34px}
+  .eyebrow{letter-spacing:.2em;font-size:10.5px;margin-bottom:12px}
+  h2{font-size:clamp(25px,3vw,34px);letter-spacing:-.032em;line-height:1.15}
+  .sec-head p{margin-top:12px;font-size:15px;line-height:1.72;color:var(--mut);max-width:660px}
+  .row-between{margin-bottom:30px}
+
+  /* hero */
+  .hero{padding-top:6px}
+  h1{letter-spacing:-.042em;line-height:1.02}
+  .lede{font-size:16.5px;line-height:1.68;max-width:560px;color:var(--ink2)}
+  .hero-cta{gap:10px;margin-top:24px}
+  .hero-stats{margin-top:34px}
+  .stat b{font-size:19px;letter-spacing:-.02em}
+  .stat span{font-size:10.5px;letter-spacing:.14em}
+
+  /* buttons */
+  .btn{border-radius:10px;font-weight:700;letter-spacing:-.01em;transition:transform .14s,box-shadow .18s,background .16s,border-color .16s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn-dark{box-shadow:0 1px 2px rgba(15,19,25,.14),0 8px 22px rgba(15,19,25,.14)}
+  .btn-ghost{background:var(--bg);border-color:var(--line2)}
+  .btn-ghost:hover{border-color:var(--ink2);background:var(--bg)}
+  .btn-accent{box-shadow:0 1px 2px rgba(47,107,255,.22),0 10px 24px rgba(47,107,255,.24)}
+  .btn-sm{border-radius:8px}
+
+  /* cards */
+  .pcard,.bcard,.kbcard,.ovcard,.mini,.onlyline,.studioCta,.hudside,.hudstage2,.chg,.ctrlbox{
+    border-radius:var(--r-lg);border-color:var(--line);box-shadow:var(--sh1)}
+  .bcard{background:var(--bg);padding:20px;transition:transform .16s,box-shadow .18s,border-color .16s}
+  .bcard:hover{transform:translateY(-2px);box-shadow:var(--sh2);border-color:var(--line2)}
+  .pcard{box-shadow:var(--sh3)}
+  .modcard{border-radius:12px;transition:transform .14s,box-shadow .16s,border-color .16s,background .16s}
+  .modcard:hover{transform:translateY(-1px);box-shadow:var(--sh1);border-color:var(--line2)}
+  .modcard.on{border-color:var(--accent-line);background:linear-gradient(180deg,var(--accent-soft),var(--bg) 150%)}
+  .modgrid{gap:12px}
+  .modbar{margin-bottom:18px}
+
+  /* builds: four inline cards */
+  .builds.four{grid-template-columns:repeat(2,1fr);gap:16px}
+  .bcard-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .kind{font:800 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+    padding:6px 9px;border-radius:7px;border:1px solid var(--line2);color:var(--mut);background:var(--paper)}
+  .kind.int{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+  .kind.ext{background:var(--warn-soft);border-color:var(--warn-line);color:var(--warn)}
+  .bcard .file{font-size:10.5px;color:var(--dim);letter-spacing:0}
+  .bcard.ext{border-color:var(--warn-line)}
+  .bcard h4{font-size:16px;letter-spacing:-.02em;margin-bottom:0}
+  .bcard .sub{font:700 10px/1.4 var(--mono);letter-spacing:.09em;color:var(--dim);margin:6px 0 14px}
+  .bcard .spec{list-style:none;border-top:1px solid var(--line);padding:2px 0 0;margin-bottom:14px}
+  .bcard .spec li{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:7px 0;
+    border-bottom:1px solid var(--line)}
+  .bcard .spec li span:first-child{color:var(--mut)}
+  .bcard .spec li span:last-child{font-weight:700;text-align:right}
+  .bcard .spec .ok{color:var(--ok)}
+  .bcard ol.steps{display:block;grid-template-columns:none;gap:0;list-style:none;counter-reset:st;margin:0 0 16px;padding:0}
+  .bcard .steps li{display:block;counter-increment:st;position:relative;padding:0 0 10px 26px;
+    font-size:12.5px;line-height:1.6;color:var(--ink2);border:0;margin:0}
+  .bcard .steps li:before{content:counter(st);position:absolute;left:0;top:0;width:17px;height:17px;
+    border-radius:50%;background:var(--paper2);color:var(--mut);font:800 9.5px/17px var(--mono);
+    text-align:center}
+  .bcard .steps li:last-child{padding-bottom:0}
+  .bcard .steps code{display:inline;font:600 11px/1.4 var(--mono);background:var(--paper2);color:var(--ink2);
+    padding:1px 5px;border-radius:5px;word-break:break-word}
+  .bcard .steps b{font-weight:700}
+  .bcard .btn-block{margin-top:auto}
+  .onlyline{align-items:center;padding:20px 22px;box-shadow:none;background:var(--paper)}
+  .onlyline .chips2 span{font-size:10.5px;padding:7px 10px;background:var(--bg)}
+  .onlyline .chips2 span:first-child{font-family:var(--font);font-weight:800;border:0;background:transparent;
+    color:var(--warn);padding-left:0}
+
+  /* config studio call-to-action */
+  .studioCta{display:flex;align-items:center;gap:16px;margin:26px 0 0;padding:18px 22px;
+    border:1px solid var(--accent-line);background:linear-gradient(120deg,var(--accent-soft),var(--bg) 72%);
+    text-decoration:none;transition:transform .16s,box-shadow .18s}
+  .studioCta:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+  .studioCta .sc-ico{width:42px;height:42px;border-radius:12px;background:var(--accent);display:grid;place-items:center;flex:none}
+  .studioCta .sc-ico svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8}
+  .studioCta .sc-txt{flex:1;min-width:0}
+  .studioCta .sc-txt b{display:block;font-size:14.5px;font-weight:800;letter-spacing:-.02em}
+  .studioCta .sc-txt em{display:block;font-style:normal;font-size:12.5px;color:var(--mut);margin-top:3px}
+  .studioCta .sc-go{font-size:12.5px;font-weight:800;color:var(--accent);white-space:nowrap}
+
+  /* hud + misc frames */
+  .hudstage2{border-radius:var(--r-lg);box-shadow:var(--sh2)}
+  .hudtools2{gap:7px;margin-top:12px}
+  .cfgpanel,.hudside{border-radius:var(--r-lg)}
+  .cmp th{font-size:11px;letter-spacing:.06em}
+  .cmp td,.cmp th{padding:13px 14px}
+  .faq{border-radius:12px;border-color:var(--line);background:var(--bg);box-shadow:var(--sh1)}
+  .faq > button{font-size:14px;font-weight:700;padding:16px 18px}
+  .faq .body{padding:0 18px 16px;font-size:13px;color:var(--mut);line-height:1.7}
+  .step{border-radius:var(--r-lg);box-shadow:var(--sh1)}
+  footer{padding:52px 0 28px}
+  .fcol h5{font-size:10.5px;letter-spacing:.16em;color:var(--dim)}
+  .fcol a{font-size:13px;padding:5px 0}
+
+  /* focus */
+  a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible{
+    outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+
+  @media (max-width:980px){
+    section{padding:56px 0}
+    .builds.four{grid-template-columns:1fr}
+    .studioCta{flex-wrap:wrap}
+    .studioCta .sc-go{width:100%;text-align:right}
+  }
+  @media (max-width:640px){
+    .wrap{padding:0 18px}
+    h2{font-size:clamp(23px,6vw,28px)}
+    .lede{font-size:15.5px}
+    .onlyline{padding:16px}
+  }
+
+  /* ============================================================
+     CONFIG STUDIO VIEW (#studio, single-file)
+     ============================================================ */
+  body.view-studio > *:not(#studioPage){display:none!important}
+  #studioPage{display:none}
+  body.view-studio #studioPage{display:block}
+  #studioPage{
+    --st-panel:var(--bg); --st-panel2:var(--paper); --st-line:var(--line); --st-line2:var(--line2);
+    --st-text:var(--ink); --st-muted:var(--mut); --st-dim:var(--dim);
+    max-width:1480px; margin:0 auto; padding:0 28px 40px; color:var(--ink);
+  }
+  #studioPage .st-top{display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:20px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  #studioPage .st-brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+  #studioPage .st-logo{width:38px;height:38px;border-radius:10px;background:var(--ink);display:grid;place-items:center;flex:none}
+  #studioPage .st-logo svg{width:22px;height:22px;fill:var(--bg)}
+  #studioPage .st-brand strong{display:block;font-size:17px;font-weight:800;letter-spacing:.1em;line-height:1.1}
+  #studioPage .st-brand em{display:block;font-style:normal;font:700 9.5px/1.6 var(--mono);letter-spacing:.16em;
+    text-transform:uppercase;color:var(--dim)}
+  #studioPage .st-topright{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  #studioPage .st-pill{display:flex;align-items:center;gap:8px;font:700 10px/1 var(--mono);letter-spacing:.08em;
+    color:var(--mut);border:1px solid var(--line2);border-radius:20px;padding:8px 12px;white-space:nowrap}
+  #studioPage .st-pill i{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+
+  #studioPage .st-hero{padding:30px 0 22px;position:relative;overflow:hidden}
+  #studioPage .st-hero:after{content:"";position:absolute;right:40px;top:-120px;width:400px;height:240px;
+    border:1px solid var(--line);border-radius:50%;transform:rotate(-24deg);pointer-events:none}
+  #studioPage .st-hero h1{font-size:clamp(28px,3.4vw,40px);font-weight:800;letter-spacing:-.038em;margin:8px 0 10px}
+  #studioPage .st-hero p{max-width:660px;font-size:14.5px;line-height:1.7;color:var(--mut);margin:0}
+  #studioPage .st-hero p b{color:var(--ink)}
+
+  #studioPage .st-ws{display:grid;grid-template-columns:228px minmax(360px,1fr) 348px;gap:16px;align-items:start}
+  #studioPage .st-panel{background:var(--st-panel);border:1px solid var(--line);border-radius:var(--r-lg);
+    box-shadow:var(--sh1);overflow:hidden}
+
+  /* nav column */
+  #studioPage .st-nav{padding:16px 10px;position:sticky;top:16px}
+  #studioPage .st-navtitle{display:flex;justify-content:space-between;align-items:center;padding:0 9px 12px;
+    font:700 10px/1 var(--mono);letter-spacing:.12em;color:var(--dim)}
+  #studioPage .st-search{width:100%;background:var(--st-panel2);border:1px solid var(--line);border-radius:9px;
+    color:var(--ink);padding:10px 12px;font-size:12.5px;margin-bottom:8px;font-family:var(--font)}
+  #studioPage .st-search:focus{outline:none;border-color:var(--accent)}
+  #studioPage #module-list{max-height:min(64vh,620px);overflow:auto;padding-right:3px}
+  #studioPage .nav-group{color:var(--dim);font:800 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+    margin:16px 9px 6px}
+  #studioPage .module{display:block;width:100%;text-align:left;padding:8px 11px;border-radius:8px;
+    color:var(--muted);font-size:12.5px;font-weight:600;position:relative;transition:background .14s,color .14s}
+  #studioPage .module:hover{background:var(--st-panel2);color:var(--ink)}
+  #studioPage .module.selected{background:var(--accent-soft);color:var(--accent);font-weight:800}
+  #studioPage .module.selected:before{content:"";position:absolute;left:0;top:9px;height:14px;width:2.5px;
+    border-radius:2px;background:var(--accent)}
+
+  /* main column */
+  #studioPage .st-mainhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+    padding:20px 22px 18px;border-bottom:1px solid var(--line)}
+  #studioPage .st-mainhead h2{font-size:23px;font-weight:800;letter-spacing:-.03em;margin:5px 0 4px}
+  #studioPage .st-small{font-size:11px;color:var(--mut)}
+  #studioPage .st-desc{padding:12px 22px;background:var(--st-panel2);border-bottom:1px solid var(--line);
+    font-size:11.5px;line-height:1.6;color:var(--mut)}
+  #studioPage .st-fields{padding:0 22px;max-height:min(56vh,470px);overflow:auto}
+  #studioPage .field{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:72px;
+    border-bottom:1px solid var(--line)}
+  #studioPage .field:last-child{border-bottom:0}
+  #studioPage .field-label{font-size:12.5px;font-weight:600;line-height:1.45}
+  #studioPage .field-id{display:block;font:400 10px/1.7 var(--mono);color:var(--dim);margin-top:2px}
+  #studioPage .switch{display:flex;align-items:center;gap:7px;min-width:70px;border:1px solid var(--line2);
+    background:var(--st-panel2);border-radius:16px;padding:4px 9px 4px 4px;color:var(--mut);font-weight:700;flex-shrink:0}
+  #studioPage .switch-knob{width:17px;height:17px;border-radius:50%;background:var(--line2);transition:.16s}
+  #studioPage .switch.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  #studioPage .switch.on .switch-knob{background:#fff}
+  #studioPage .switch-word{font-size:10px;letter-spacing:.05em}
+  #studioPage .number-group{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+  #studioPage .number{width:104px;border:1px solid var(--line2);background:var(--st-panel2);border-radius:8px;
+    padding:8px 10px;color:var(--ink);text-align:right;font-size:12.5px;font-variant-numeric:tabular-nums;
+    font-family:var(--font)}
+  #studioPage .number:focus{outline:none;border-color:var(--accent)}
+  #studioPage select.number{appearance:none;cursor:pointer;text-align:left;padding-right:26px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);
+    background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;background-size:5px 5px,5px 5px;
+    background-repeat:no-repeat}
+  #studioPage .range{font:9.5px/1 var(--mono);color:var(--dim)}
+  #studioPage [aria-invalid=true]{border-color:#dc2626!important;box-shadow:0 0 0 2px rgba(220,38,38,.14)}
+  #studioPage .section-heading{font-size:12px;font-weight:800;background:var(--st-panel2);border:1px solid var(--line);
+    border-radius:8px;padding:9px 12px;margin:16px -4px 0}
+
+  /* export */
+  #studioPage .st-export{padding:18px 22px;border-top:1px solid var(--line);background:var(--st-panel2)}
+  #studioPage .st-label{display:block;font:700 10px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;
+    color:var(--dim);margin-bottom:8px}
+  #studioPage .st-name{width:100%;border:1px solid var(--line2);background:var(--bg);border-radius:9px;
+    padding:10px 12px;color:var(--ink);font-weight:700;font-family:var(--font)}
+  #studioPage .st-name:focus{outline:none;border-color:var(--accent)}
+  #studioPage .st-exporttop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0 8px}
+  #studioPage textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:9px;
+    padding:11px;color:var(--mut);font:10px/1.7 var(--mono);resize:vertical;min-height:82px}
+  #studioPage textarea:focus{outline:none;border-color:var(--accent);color:var(--ink)}
+  #studioPage .st-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  #studioPage .grow{flex:1}
+
+  /* inspector */
+  #studioPage .st-insp{padding:20px 18px}
+  #studioPage .st-insp h3{font-size:19px;font-weight:800;letter-spacing:-.03em;margin:6px 0 8px}
+  #studioPage .st-insp p{font-size:11px;line-height:1.7;color:var(--mut)}
+  #studioPage .st-insp textarea{min-height:100px}
+  #studioPage .st-upload{position:relative;overflow:hidden;cursor:pointer}
+  #studioPage .st-upload input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+  #studioPage .st-div{height:1px;background:var(--line);margin:18px 0}
+  #studioPage .st-previewtitle{font-size:12.5px;font-weight:700;margin:8px 0 4px;word-break:break-word}
+  #studioPage .st-diff{max-height:170px;overflow:auto}
+  #studioPage .diff-row{display:grid;grid-template-columns:1fr auto;gap:2px 6px;padding:7px 0;
+    border-bottom:1px solid var(--line);font:9.5px/1.6 var(--mono);word-break:break-all}
+  #studioPage .diff-row span:nth-child(2){color:var(--mut);font-size:8.5px}
+  #studioPage .diff-row span:last-child{grid-column:2;font-size:8px;font-weight:800;letter-spacing:.06em;color:var(--accent)}
+  #studioPage .diff-row.skipped{opacity:.45}
+  #studioPage .st-check{display:flex;gap:8px;align-items:flex-start;font-size:11px;color:var(--mut);margin:10px 0}
+  #studioPage .st-check input{accent-color:var(--accent);margin-top:3px;flex:none}
+  #studioPage .st-note{font-size:10px;line-height:1.75;color:var(--dim);margin-top:12px}
+  #studioPage .st-note b{color:var(--mut)}
+
+  /* status + foot */
+  #studioPage .st-status{margin:18px 0 0;padding:12px 16px;border:1px solid var(--line);border-radius:10px;
+    background:var(--st-panel);font-size:12px;color:var(--mut)}
+  #studioPage .st-status.error{color:#dc2626;border-color:#f2c9c9;background:#fdf3f3}
+  [data-theme="dark"] #studioPage .st-status.error{color:#ffb4b4;border-color:#5a2a2a;background:#241414}
+  #studioPage .st-foot{text-align:center;font-size:10px;line-height:1.9;color:var(--dim);padding:26px 0 10px}
+  #studioPage .st-foot b{color:var(--mut);font-weight:700}
+
+  @media (max-width:1240px){
+    #studioPage .st-ws{grid-template-columns:200px minmax(320px,1fr)}
+    #studioPage .st-insp{grid-column:2}
+  }
+  @media (max-width:820px){
+    #studioPage{padding:0 16px 30px}
+    #studioPage .st-ws{display:block}
+    #studioPage .st-nav{position:static;margin-bottom:12px}
+    #studioPage #module-list{max-height:210px;display:grid;grid-template-columns:1fr 1fr}
+    #studioPage .nav-group{grid-column:1/-1}
+    #studioPage .st-main{margin-bottom:12px}
+    #studioPage .st-mainhead,#studioPage .st-export,#studioPage .st-insp{padding:16px}
+    #studioPage .st-fields{padding:0 16px;max-height:none}
+    #studioPage .st-hero:after{display:none}
+  }
+
+
+  /* Mod / Exe switcher */
+  .bmBar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  .bmTabs{display:inline-flex;gap:4px;padding:4px;background:var(--paper2);border:1px solid var(--line);
+    border-radius:12px}
+  .bmTab{display:flex;flex-direction:column;gap:1px;padding:9px 18px;border-radius:9px;text-align:left;
+    transition:background .16s,box-shadow .18s,color .16s}
+  .bmTab b{font-size:13.5px;font-weight:800;letter-spacing:-.01em;color:var(--ink2)}
+  .bmTab small{font:600 9.5px/1.3 var(--mono);letter-spacing:.04em;color:var(--dim)}
+  .bmTab:hover{background:var(--bg)}
+  .bmTab.on{background:var(--bg);box-shadow:var(--sh1);border:1px solid var(--line)}
+  .bmTab.on b{color:var(--accent)}
+  .bmTab.on small{color:var(--mut)}
+  .bmHint{margin:0;font-size:12px;color:var(--mut);max-width:420px;line-height:1.6}
+  .bmPane[hidden]{display:none!important}
+  @media (max-width:760px){
+    .bmTabs{width:100%}
+    .bmTab{flex:1;padding:9px 12px}
+    .bmHint{max-width:none}
+  }
+
+  /* ============================================================
+     MEDIA LAYER — hero video, HUD backdrops, build poster
+     ============================================================ */
+  .hero-side{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .heroShot{position:relative;margin:0;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);
+    box-shadow:var(--sh3);background:#0b1220;aspect-ratio:16/9}
+  .heroShot .heroVid,.heroShot .heroFallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .heroShot .heroVid{opacity:0;transition:opacity .5s ease;z-index:1}
+  .heroShot.playing .heroVid{opacity:1}
+  .heroShot .heroFallback{z-index:0}
+  .heroShot:after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(180deg,rgba(7,12,20,0) 46%,rgba(7,12,20,.72) 100%)}
+  .heroShot-bar{position:absolute;left:0;right:0;bottom:0;z-index:3;display:flex;align-items:center;gap:8px;
+    padding:10px 12px;color:#fff}
+  .hs-live{display:inline-flex;align-items:center;gap:6px;font:800 9px/1 var(--mono);letter-spacing:.12em;
+    background:rgba(255,255,255,.16);backdrop-filter:blur(6px);border-radius:6px;padding:6px 8px}
+  .hs-live i{width:5px;height:5px;border-radius:50%;background:#5bffa0;box-shadow:0 0 0 3px rgba(91,255,160,.22)}
+  .hs-play,.hs-sound{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
+    background:rgba(255,255,255,.16);backdrop-filter:blur(6px);transition:background .15s}
+  .hs-play:hover,.hs-sound:hover{background:rgba(255,255,255,.28)}
+  .hs-play svg,.hs-sound svg{width:13px;height:13px;fill:#fff;stroke:#fff;stroke-width:1.6}
+  .hs-sound svg{fill:none}
+  .hs-sound[aria-pressed="true"]{background:rgba(47,107,255,.85)}
+  .hs-note{margin-left:auto;font:600 10px/1 var(--mono);letter-spacing:.05em;color:rgba(255,255,255,.78)}
+
+  /* HUD stage backdrops */
+  .hudstage2{background:#0b1220}
+  .hudstage2 .bgshot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;
+    transition:opacity .35s ease;pointer-events:none;user-select:none}
+  .hudstage2.day .bgshot.day,.hudstage2.night .bgshot.night,.hudstage2.nether .bgshot.nether{opacity:1}
+  .hudstage2 .gnd{display:none}
+  .hudstage2:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,.30))}
+  .hudstage2.night:before{background:linear-gradient(180deg,rgba(0,0,0,.36),rgba(0,0,0,.5))}
+  .hudstage2.nether:before{background:linear-gradient(180deg,rgba(20,0,0,.34),rgba(30,0,0,.46))}
+  .hudstage2 .hudel2,.hudstage2 .guide{z-index:2}
+
+  /* build poster */
+  .buildShot{position:relative;margin:22px 0 0;border-radius:var(--r-lg);overflow:hidden;
+    border:1px solid var(--line);box-shadow:var(--sh2);min-height:210px;display:flex;align-items:flex-end}
+  .buildShot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .buildShot:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,12,20,.86),rgba(8,12,20,.35) 62%,rgba(8,12,20,.12))}
+  .buildShot figcaption{position:relative;z-index:1;padding:24px 26px;max-width:520px;color:#fff}
+  .buildShot figcaption b{display:block;font-size:19px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+  .buildShot figcaption span{font-size:12.5px;line-height:1.65;color:rgba(255,255,255,.82)}
+
+  .hs-live,.hs-note{white-space:nowrap}
+  @media (max-width:980px){
+    .hero-side{gap:12px}
+    .buildShot{min-height:180px}
+    .buildShot:after{background:linear-gradient(180deg,rgba(8,12,20,.55),rgba(8,12,20,.88))}
+    .buildShot figcaption{padding:18px}
+  }
+  @media (max-width:560px){
+    .heroShot-bar{padding:8px 10px;gap:6px}
+    .hs-live{font-size:8px;padding:5px 7px}
+    .hs-note{display:none}
+    .hs-play,.hs-sound{width:26px;height:26px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .heroShot .heroVid{display:none}
+    .hudstage2 .bgshot{transition:none}
+  }
 </style>
 </head>
 <body>
@@ -568,7 +958,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
     <nav class="nav" id="nav">
       <a href="#modules">Modules</a>
       <a href="#hud">HUD Editor</a>
-      <a href="config.html">Config Studio</a>
+      <a href="#studio" data-studio-link>Config Studio</a>
       <a href="#builds">Builds</a>
       <a href="#compare">Compatibility</a>
       <a href="#controls">Controls</a>
@@ -597,8 +987,8 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
           <h1>Clean client.<br /><span class="light">Zero</span> <em>noise</em>.</h1>
           <p class="lede">
             One ClickGUI, no FPS tax, and a setup you can carry around as a single config code.
-            Take the <b>Mod for 1.21.11 (Fabric)</b> or <b>1.8.9 (Forge)</b>, or the <b>External</b>
-            for anything from 1.20 to 1.21.11 — <b>CraftRise</b> included.
+            Take <b>Internal</b> — 1.21.11 (Fabric), 1.8.9 (Forge) or the Windows loader — or
+            <b>External</b> for anything from 1.20 to 1.21.11, <b>CraftRise</b> included.
           </p>
           <div class="hero-cta">
             <a href="#builds" class="btn btn-accent">
@@ -610,15 +1000,32 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
           <div class="statstrip">
             <div class="stat"><b id="statModules">—</b><span>Modules</span></div>
             <div class="stat"><b id="statCats">—</b><span>Categories</span></div>
-            <div class="stat"><b>3</b><span>Builds</span></div>
+            <div class="stat"><b>2</b><span>Ways in</span></div>
             <div class="stat"><b>Right Shift</b><span>Opens GUI</span></div>
           </div>
         </div>
 
+        <div class="hero-side">
+        <figure class="heroShot" id="heroShot">
+          <video id="heroVideo" class="heroVid" src="coxe-hero.mp4" poster="img/hero-poster.jpg"
+                 muted loop playsinline preload="metadata" aria-label="Coxe promo loop"></video>
+          <img class="heroFallback" src="img/hero-poster.jpg" alt="Voxel landscape at sunrise" />
+          <div class="heroShot-bar">
+            <span class="hs-live"><i></i> LIVE PREVIEW</span>
+            <button type="button" class="hs-play" id="heroVidToggle" aria-label="Play or pause the promo loop">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button type="button" class="hs-sound" id="heroVidSound" aria-pressed="false" aria-label="Toggle sound">
+              <svg viewBox="0 0 24 24"><path d="M4 9v6h3l5 4V5L7 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7"/></svg>
+            </button>
+            <span class="hs-note">Coxe in game · 1.21.11</span>
+          </div>
+        </figure>
+
         <aside class="pcard">
           <div class="pc-head">
-            <span class="badge">Latest</span>
-            <h3>Coxe Mod</h3>
+            <span class="badge">Latest · Internal</span>
+            <h3>Coxe Internal</h3>
             <span class="ver" id="cardVer">1.21.11</span>
           </div>
           <div class="pc-tabs" role="tablist" aria-label="Minecraft version">
@@ -632,6 +1039,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
             <li><span class="k">File</span><span class="v"><code id="specFile">coxe-mod.jar</code></span></li>
             <li><span class="k">GUI key</span><span class="v" id="specKey">Right Shift</span></li>
             <li><span class="k">Platforms</span><span class="v">Windows · macOS · Linux</span></li>
+            <li><span class="k">No jar setup?</span><span class="v"><a href="coxe-internal.exe" download class="magnet" data-dl="Coxe Internal Loader" style="color:var(--accent);font-weight:700">coxe-internal.exe</a></span></li>
           </ul>
           <div class="pc-foot">
             <a href="coxe-mod.jar" id="modDl" download class="btn btn-accent btn-block magnet" data-dl="Coxe Mod 1.21.11">
@@ -641,6 +1049,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
             <div class="pc-note" id="modNote">Drop it in <code>.minecraft/mods</code> and launch Fabric 1.21.11</div>
           </div>
         </aside>
+        </div>
       </div>
     </div>
   </div>
@@ -652,9 +1061,9 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
         <div class="sec-head rv">
           <div class="eyebrow">Modules</div>
           <h2>Every module, searchable</h2>
-          <p>Filter, search, and open a module's <b>settings</b> (⚙) to change its values. Everything you set —
-             toggles, slider values and the HUD layout — is packed into one code you can copy or share as a link.
-             Need per-field control? Open the <a href="config.html">Config Studio</a>, same schema, same code.</p>
+          <p>Browse and test the full module list here — filter it, open a module's <b>settings</b> (⚙) and see the
+             overlay react. Codes, presets and saved setups live in the
+             <a href="#studio" data-studio-link>Config Studio</a>, so this page stays clean.</p>
         </div>
         <button class="btn btn-ghost btn-sm" id="resetMods">Reset everything</button>
       </div>
@@ -670,48 +1079,14 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
 
       <div class="modgrid" id="modGrid"></div>
 
-      <!-- config panel -->
-      <div class="cfgpanel">
-        <div class="cfgcols">
-          <div class="cfgblock">
-            <div class="cfgh">Config code <span class="badge2">schema 1 · modules + HUD</span></div>
-            <div class="cfgrow">
-              <input class="cfgin" id="cfgCode" readonly value="" aria-label="Config code" />
-              <button class="btn btn-dark btn-sm" id="copyCfg">Copy</button>
-            </div>
-            <div class="cfgrow">
-              <button class="btn btn-ghost btn-sm" id="copyLink">Copy share link</button>
-              <button class="btn btn-ghost btn-sm" id="openImport">Import code…</button>
-            </div>
-            <div class="cfgrow">
-              <a class="btn btn-ghost btn-sm" href="config.html" style="text-decoration:none">Open Config Studio →</a>
-            </div>
-
-            <div class="importbox" id="importBox" hidden>
-              <textarea id="importInput" placeholder="Paste a CX2.… code, an old CX2- code, or a share link…" spellcheck="false"></textarea>
-              <div class="cfgrow">
-                <button class="btn btn-accent btn-sm" id="applyImport">Apply</button>
-                <button class="btn btn-ghost btn-sm" id="cancelImport">Cancel</button>
-                <span class="cfgnote" id="importDiff"></span>
-              </div>
-            </div>
-
-            <div class="cfgnote" id="cfgInfo">Turn modules on or move a slider — the code updates itself.</div>
-          </div>
-
-          <div class="cfgblock">
-            <div class="cfgh">Presets</div>
-            <div class="presets" id="presets"></div>
-            <div class="cfgh" style="margin-top:16px">Saved configs</div>
-            <div class="cfgrow">
-              <input class="cfgin" id="cfgName" placeholder="Name this config…" maxlength="24"
-                     style="letter-spacing:0;font-family:var(--font);font-weight:600;text-transform:none" />
-              <button class="btn btn-dark btn-sm" id="saveCfg">Save</button>
-            </div>
-            <div class="savedlist" id="savedList"></div>
-          </div>
-        </div>
-      </div>
+      <a class="studioCta rv" href="#studio" data-studio-link>
+        <span class="sc-ico"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h9"/><circle cx="18" cy="17" r="2.4"/></svg></span>
+        <span class="sc-txt">
+          <b>Config codes live in the Config Studio</b>
+          <em>All 139 fields, presets, diff-preview imports and your saved setups — one page, kept out of the way here.</em>
+        </span>
+        <span class="sc-go">Open Config Studio →</span>
+      </a>
 
       <div class="previewgrid">
         <div class="ovcard">
@@ -730,7 +1105,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
           <div class="mrow"><span id="mCountLabel">Enabled modules</span> <b id="mCount">0</b></div>
           <div class="mrow">Custom values <b id="mVals">0</b></div>
           <div class="mrow">Categories active <b id="mCats">0</b></div>
-          <div class="mrow">Config code length <b id="mLen">0</b></div>
+          <div class="mrow">HUD elements on <b id="mLen">0</b></div>
           <div class="mrow">Stored in <b>browser only</b></div>
         </div>
       </div>
@@ -751,6 +1126,9 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
         <div class="hudwrap rv">
           <div>
             <div class="hudstage2 day" id="hudStage">
+              <img class="bgshot day" src="img/hud-day.jpg" alt="Daytime voxel landscape behind the HUD preview" />
+              <img class="bgshot night" src="img/hud-night.jpg" alt="Night-time voxel landscape behind the HUD preview" />
+              <img class="bgshot nether" src="img/hud-nether.jpg" alt="Nether landscape behind the HUD preview" />
               <div class="gnd"></div>
               <div class="guide v" id="guideV"></div>
               <div class="guide h" id="guideH"></div>
@@ -816,53 +1194,126 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
       <div class="sec-head rv">
         <div class="eyebrow">Downloads</div>
         <h2>Choose your build</h2>
-        <p>All three files sit next to this page. Mod builds run inside Minecraft as a jar, the External
-           runs next to the game as a single exe.</p>
+        <p>Two ways to run Coxe: pick <b>Mod</b> for a jar inside Minecraft, or <b>Exe</b> for a
+           one-file launcher. The cards and the setup steps below switch with your choice.</p>
       </div>
 
-      <div class="builds">
-        <article class="bcard rv">
-          <div class="top">
-            <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v10m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
-            <div><h4>Coxe Mod</h4><div class="sub">MINECRAFT 1.21.11 · FABRIC</div></div>
+      <div class="bmBar rv">
+        <div class="bmTabs" role="tablist" aria-label="Build type">
+          <button type="button" class="bmTab on" role="tab" data-buildmode="mod" aria-selected="true">
+            <b>Mod</b><small>jar · Fabric 1.21.11 / Forge 1.8.9</small>
+          </button>
+          <button type="button" class="bmTab" role="tab" data-buildmode="exe" aria-selected="false">
+            <b>Exe</b><small>internal loader / external</small>
+          </button>
+        </div>
+        <p class="bmHint" id="bmHint">Pick the jar for your loader — Minecraft runs the client from inside the game.</p>
+      </div>
+
+      <div class="builds two bmPane" data-pane="mod">
+        <article class="bcard">
+          <div class="bcard-top">
+            <span class="kind int">Mod · Internal</span>
+            <span class="mono file">coxe-mod.jar</span>
           </div>
-          <ul>
-            <li><span>File</span><span class="mono" style="font-size:11px">coxe-mod.jar</span></li>
-            <li><span>Loader</span><span>Fabric API</span></li>
+          <h4>Coxe for Fabric</h4>
+          <div class="sub">MINECRAFT 1.21.11 · FABRIC</div>
+          <ul class="spec">
+            <li><span>Loader</span><span>Fabric Loader + Fabric API</span></li>
             <li><span>Java</span><span>21+</span></li>
-            <li><span>GUI key</span><span>Right Shift</span></li>
+            <li><span>Modules</span><span class="ok">All 56</span></li>
           </ul>
-          <a href="coxe-mod.jar" download class="btn btn-dark btn-block magnet" data-dl="Coxe Mod 1.21.11">Download</a>
+          <ol class="steps">
+            <li>Install <b>Fabric Loader</b> for 1.21.11 and create the profile.</li>
+            <li>Put <b>Fabric API</b> and <code>coxe-mod.jar</code> into <code>.minecraft/mods</code>.</li>
+            <li>Launch the Fabric profile, join a world, press <b>Right Shift</b>.</li>
+          </ol>
+          <a href="coxe-mod.jar" download class="btn btn-dark btn-block magnet" data-dl="Coxe Mod 1.21.11 Fabric">Download coxe-mod.jar</a>
         </article>
 
-        <article class="bcard rv">
-          <div class="top">
-            <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v10m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
-            <div><h4>Coxe Mod</h4><div class="sub">MINECRAFT 1.8.9 · FORGE</div></div>
+        <article class="bcard">
+          <div class="bcard-top">
+            <span class="kind int">Mod · Internal</span>
+            <span class="mono file">coxe-mod-1.8.9.jar</span>
           </div>
-          <ul>
-            <li><span>File</span><span class="mono" style="font-size:11px">coxe-mod-1.8.9.jar</span></li>
+          <h4>Coxe for Forge</h4>
+          <div class="sub">MINECRAFT 1.8.9 · FORGE</div>
+          <ul class="spec">
             <li><span>Loader</span><span>Forge 11.15.1.2318</span></li>
             <li><span>Java</span><span>8+</span></li>
-            <li><span>GUI key</span><span>Right Shift</span></li>
+            <li><span>Modules</span><span class="ok">All 56</span></li>
           </ul>
-          <a href="coxe-mod-1.8.9.jar" download class="btn btn-dark btn-block magnet" data-dl="Coxe Mod 1.8.9 Forge">Download</a>
-        </article>
-
-        <article class="bcard rv">
-          <div class="top">
-            <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-            <div><h4>Coxe External</h4><div class="sub">1.20 → 1.21.11 · WINDOWS</div></div>
-          </div>
-          <ul>
-            <li><span>File</span><span class="mono" style="font-size:11px">coxe-external.exe</span></li>
-            <li><span>Loader</span><span>None</span></li>
-            <li><span>CraftRise</span><span class="ok">Supported</span></li>
-            <li><span>GUI key</span><span>Right Shift</span></li>
-          </ul>
-          <a href="coxe-external.exe" download class="btn btn-dark btn-block magnet" data-dl="Coxe External 1.20–1.21.11">Download</a>
+          <ol class="steps">
+            <li>Install <b>Forge 1.8.9</b> (11.15.1.2318) and create the profile.</li>
+            <li>Put <code>coxe-mod-1.8.9.jar</code> into <code>.minecraft/mods</code>.</li>
+            <li>Launch the Forge profile, join a world, press <b>Right Shift</b>.</li>
+          </ol>
+          <a href="coxe-mod-1.8.9.jar" download class="btn btn-dark btn-block magnet" data-dl="Coxe Mod 1.8.9 Forge">Download coxe-mod-1.8.9.jar</a>
         </article>
       </div>
+
+      <div class="builds two bmPane" data-pane="exe" hidden>
+        <article class="bcard">
+          <div class="bcard-top">
+            <span class="kind int">Exe · Internal</span>
+            <span class="mono file">coxe-internal.exe</span>
+          </div>
+          <h4>Coxe Internal Loader</h4>
+          <div class="sub">WINDOWS · NO JAR SETUP</div>
+          <ul class="spec">
+            <li><span>Setup</span><span>None — double click</span></li>
+            <li><span>Platform</span><span>Windows 10 / 11</span></li>
+            <li><span>Modules</span><span class="ok">All 56</span></li>
+          </ul>
+          <ol class="steps">
+            <li>Run <code>coxe-internal.exe</code> — allow it if Windows asks.</li>
+            <li>Pick your Minecraft install in the loader window and hit <b>Start</b>.</li>
+            <li>The game opens with the client inside — press <b>Right Shift</b>.</li>
+          </ol>
+          <a href="coxe-internal.exe" download class="btn btn-dark btn-block magnet" data-dl="Coxe Internal Loader">Download coxe-internal.exe</a>
+        </article>
+
+        <article class="bcard ext">
+          <div class="bcard-top">
+            <span class="kind ext">Exe · External</span>
+            <span class="mono file">coxe-external.exe</span>
+          </div>
+          <h4>Coxe External</h4>
+          <div class="sub">1.20 → 1.21.11 · CRAFTRISE</div>
+          <ul class="spec">
+            <li><span>Loader</span><span>None</span></li>
+            <li><span>CraftRise</span><span class="ok">Supported</span></li>
+            <li><span>Platform</span><span>Windows 10 / 11</span></li>
+          </ul>
+          <ol class="steps">
+            <li>Run <code>coxe-external.exe</code> and leave it open.</li>
+            <li>Start Minecraft (1.20 – 1.21.11) or open CraftRise.</li>
+            <li>Press <b>Right Shift</b> in game — the menu overlays the game.</li>
+          </ol>
+          <a href="coxe-external.exe" download class="btn btn-dark btn-block magnet" data-dl="Coxe External 1.20–1.21.11">Download coxe-external.exe</a>
+        </article>
+      </div>
+
+      <div class="onlyline rv">
+        <div class="lead">
+          <h4>Internal vs External</h4>
+          <p>Internal hooks the render pipeline, so it ships the full module set. External runs next to the game:
+             same GUI, same config code, shared module set.</p>
+        </div>
+        <div class="chips2">
+          <span>Only in Internal</span><span>Chams</span><span>XRay</span><span>FullBright</span><span>Freecam</span>
+          <span>CameraClip</span><span>Nametags</span><span>HoleESP</span><span>StorageESP</span><span>ItemESP</span>
+        </div>
+      </div>
+
+      <figure class="buildShot rv">
+        <img src="img/hero-poster.jpg" alt="Coxe running over a voxel valley at sunrise" />
+        <figcaption>
+          <b>Same client, four ways in</b>
+          <span>Jars for Forge 1.8.9 and Fabric 1.21.11, the internal Windows loader, or the external exe for
+                CraftRise and any 1.20 – 1.21.11 install.</span>
+        </figcaption>
+      </figure>
 
       <div class="dlopt rv">
         <div class="h">
@@ -910,7 +1361,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
         </div>
         <div class="tablewrap rv" style="overflow-x:auto">
           <table class="cmp">
-            <thead><tr><th>Feature</th><th>Mod · 1.21.11</th><th>Mod · 1.8.9</th><th>External</th></tr></thead>
+            <thead><tr><th>Feature</th><th>Internal · 1.21.11</th><th>Internal · 1.8.9</th><th>External</th></tr></thead>
             <tbody>
               <tr><td>Loader</td><td class="hl">Fabric</td><td class="hl">Forge</td><td>None</td></tr>
               <tr><td>Minecraft</td><td>1.21.11</td><td>1.8.9</td><td>1.20 – 1.21.11</td></tr>
@@ -919,6 +1370,8 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
               <tr><td>Lunar / Feather / Badlion</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
               <tr><td>Config codes</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
               <tr><td>HUD editor</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+              <tr><td>Internal loader (.exe)</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">—</td></tr>
+              <tr><td>Render-hook modules</td><td class="yes">All 56</td><td class="yes">All 56</td><td>Shared set</td></tr>
               <tr><td>Platforms</td><td>Win · mac · Linux</td><td>Win · mac · Linux</td><td>Windows</td></tr>
             </tbody>
           </table>
@@ -967,7 +1420,9 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
       <div class="wrap">
         <div class="sec-head rv">
           <div class="eyebrow">Setup</div>
-          <h2>Three steps</h2>
+          <h2 id="setupTitle">Three steps with the Mod</h2>
+          <p id="setupLede">Jar in the mods folder, loader installed, GUI key bound. Change the download choice above and
+             these steps follow it.</p>
         </div>
 
         <div class="ostabs" id="osTabs">
@@ -993,7 +1448,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
           <div class="lh"><span class="lv">v3.6</span><span class="tag">Latest</span><span class="ld">Current build</span></div>
           <ul>
             <li>1.8.9 build moved to <b>Forge</b> (11.15.1.2318) alongside the 1.21.11 Fabric build</li>
-            <li>External tuned for <b>CraftRise</b></li>
+            <li>External tuned for <b>CraftRise</b> — plus an Internal Windows loader for jar-free setups</li>
             <li>Config codes and a full HUD editor on every build</li>
             <li>Module search, category filters and per-module toggles</li>
           </ul>
@@ -1028,15 +1483,18 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
         <div class="faqs">
           <div class="faq rv">
             <button type="button">Which build should I download? <span class="plus">+</span></button>
-            <div class="body"><p>On <b>Forge 1.8.9</b> or <b>Fabric 1.21.11</b> take the matching Mod jar — that is the
-              tightest integration. If you switch versions a lot, use Lunar / Feather / Badlion, or play on
-              <b>CraftRise</b>, take the External: one exe covers 1.20 → 1.21.11 with no loader.</p></div>
+            <div class="body"><p>On <b>Forge 1.8.9</b> or <b>Fabric 1.21.11</b> take the matching <b>Internal</b> jar —
+              that is the tightest integration, and the only way to get the render-hook modules.
+              If jars are a hassle, <code>coxe-internal.exe</code> loads the same client for you.
+              If you switch versions a lot, use Lunar / Feather / Badlion, or play on <b>CraftRise</b>,
+              take the <b>External</b>: one exe covers 1.20 → 1.21.11 with no loader.</p></div>
           </div>
           <div class="faq rv">
-            <button type="button">What do I need for the Mod? <span class="plus">+</span></button>
+            <button type="button">What do I need for Internal? <span class="plus">+</span></button>
             <div class="body"><p><b>1.8.9:</b> Forge for 1.8.9 (11.15.1.2318 recommended) and Java 8+ —
               <code>coxe-mod-1.8.9.jar</code>. <b>1.21.11:</b> Fabric Loader, Fabric API and Java 21+ —
-              <code>coxe-mod.jar</code>.</p></div>
+              <code>coxe-mod.jar</code>. Nothing to install for <code>coxe-internal.exe</code> or
+              <code>coxe-external.exe</code>; both are Windows 10/11 and start with a double click.</p></div>
           </div>
           <div class="faq rv">
             <button type="button">Does it work with CraftRise? <span class="plus">+</span></button>
@@ -1047,12 +1505,12 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
             <button type="button">How do config codes work? <span class="plus">+</span></button>
             <div class="body"><p>Modules, their slider values, the menu key and the whole HUD layout are packed into
               one code that looks like <code>CX2.…</code> with a CRC32 tail. The same code is read by this page,
-              the <a href="config.html">Config Studio</a> and native <b>Configs → Paste</b>. An 8-digit checksum
+              the <a href="#studio" data-studio-link>Config Studio</a> and native <b>Configs → Paste</b>. An 8-digit checksum
               catches accidental edits, and nothing leaves your browser.</p></div>
           </div>
           <div class="faq rv">
             <button type="button">Mac or Linux? <span class="plus">+</span></button>
-            <div class="body"><p>The External is Windows 10/11 only. On macOS and Linux use the Mod —
+            <div class="body"><p>The External and the Internal loader are Windows 10/11 only. On macOS and Linux use the Internal jars —
               Forge 1.8.9 or Fabric 1.21.11, both have the full module set.</p></div>
           </div>
           <div class="faq rv">
@@ -1071,7 +1529,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
     <div class="cta rv">
       <div>
         <h2>Ready when you are.</h2>
-        <p>Three files, one key. Grab the build that matches your Minecraft and open the ClickGUI.</p>
+        <p>Four files, one key. Grab the build that matches your Minecraft and open the ClickGUI.</p>
       </div>
       <div class="acts">
         <a href="#builds" class="btn btn-accent">Download builds</a>
@@ -1080,6 +1538,96 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
     </div>
   </div>
 </main>
+
+
+  <!-- ================= CONFIG STUDIO VIEW ================= -->
+  <div id="studioPage" hidden>
+    <div class="st-top">
+      <a class="st-brand" href="#" data-back>
+        <span class="st-logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 5c-5.2 0-8.5 4-8.5 9v11l2.6-2.2 2.6 2.2 2.7-2.2 2.6 2.2 2.7-2.2 2.6 2.2V14c0-5-3.3-9-8.3-9z"/></svg></span>
+        <span><strong>COXE</strong><em>Config studio</em></span>
+      </a>
+      <div class="st-topright">
+        <span class="st-pill"><i></i> SHARED SCHEMA 1 · 56 MODULES + HUD</span>
+        <button class="btn btn-ghost btn-sm" data-back>← Back to site</button>
+      </div>
+    </div>
+
+    <div class="st-hero">
+      <div class="eyebrow">Your setup. One code.</div>
+      <h1>Build it. Share it. Keep control.</h1>
+      <p>Fine-tune one module or your complete setup. <b>No accounts, no uploads.</b> Preview every import
+         before applying it.</p>
+    </div>
+
+    <div class="st-ws">
+      <nav class="st-panel st-nav" aria-label="Config sections">
+        <div class="st-navtitle"><span>SECTIONS</span><span id="secCount"></span></div>
+        <input id="search" class="st-search" placeholder="Find a module…" aria-label="Find a module" autocomplete="off">
+        <div id="module-list"></div>
+      </nav>
+
+      <div class="st-panel st-main">
+        <div class="st-mainhead">
+          <div>
+            <div class="eyebrow">Configuration</div>
+            <h2 id="scope"></h2>
+            <div id="field-count" class="st-small"></div>
+          </div>
+          <button id="reset" class="btn btn-ghost btn-sm">Reset section</button>
+        </div>
+        <div class="st-desc" id="scope-note"></div>
+        <div class="st-fields" id="fields"></div>
+        <div class="st-export">
+          <label class="st-label" for="name">Preset name</label>
+          <input id="name" class="st-name" value="My preset" maxlength="32" autocomplete="off" spellcheck="false">
+          <div class="st-exporttop"><label class="st-label" for="code">Share code</label><span class="st-small" id="summary"></span></div>
+          <textarea id="code" readonly placeholder="Your CX2 code appears here after Generate." spellcheck="false" aria-label="Generated config code"></textarea>
+          <div class="st-actions">
+            <button id="generate" class="btn btn-accent grow">Generate code</button>
+            <button id="copy" class="btn btn-ghost">Copy</button>
+            <button id="download" class="btn btn-ghost">Download .cx2</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="st-panel st-insp">
+        <div class="eyebrow">Import / inspect</div>
+        <h3>Know what changes.</h3>
+        <p>Paste a code from a friend or open a saved file. Nothing is applied automatically.</p>
+        <textarea id="import-code" placeholder="CX2.…" spellcheck="false" aria-label="Code to inspect"></textarea>
+        <div class="st-actions">
+          <button id="preview" class="btn btn-accent grow">Preview changes</button>
+          <label class="btn btn-ghost st-upload">Open file<input id="file" type="file" accept=".cx2,.txt,text/plain" aria-label="Open config file"></label>
+        </div>
+        <div class="st-div"></div>
+        <div class="eyebrow">Change preview</div>
+        <div id="preview-name" class="st-previewtitle">Nothing imported</div>
+        <p id="preview-count" class="st-small">Validated fields will appear here.</p>
+        <div id="diff" class="st-diff"></div>
+        <label class="st-check"><input id="include-states" type="checkbox"><span>Include requested ON/OFF states</span></label>
+        <label class="st-check"><input id="include-keys" type="checkbox"><span>Include keybindings</span></label>
+        <div class="st-actions">
+          <button id="apply" class="btn btn-accent grow" disabled>Apply to editor</button>
+          <button id="undo" class="btn btn-ghost" disabled>Undo</button>
+        </div>
+        <p class="st-note">This editor cannot touch your game. Generate the code and paste it into
+          native <b>Configs → Paste → Apply</b> — the client previews it too, and leaves states and keybinds
+          out by default.</p>
+        <div class="st-div"></div>
+        <p class="st-note">ON is a saved request, not proof of an active engine. Missing APIs stay blocked in game.</p>
+        <p class="st-note">One format everywhere: <b>CX2.&lt;payload&gt;.&lt;crc32&gt;</b>, shared with the module grid
+          and HUD editor on this site. Codes are readable settings, not secrets — CRC32 only catches typos.</p>
+      </aside>
+    </div>
+
+    <div id="status" class="st-status" role="status" aria-live="polite">Choose a section. Everything happens inside this file.</div>
+
+    <div class="st-foot">
+      <b>COXE / GRAPHITE</b> — single HTML · zero external resources<br>
+      No license keys, account data, files, commands or URLs are embedded in a config code.
+    </div>
+  </div>
 
 <footer>
   <div class="wrap">
@@ -1095,14 +1643,15 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
           </span>
           <span>COXE<small>MINECRAFT CLIENT</small></span>
         </a>
-        <p>Mod for 1.21.11 (Fabric) and 1.8.9 (Forge), External for 1.20 → 1.21.11 with CraftRise support.
+        <p>Internal for 1.21.11 (Fabric), 1.8.9 (Forge) and Windows loader; External for 1.20 → 1.21.11 with CraftRise support.
            Config codes, HUD editor and module search on every build.</p>
       </div>
       <div class="fcols">
         <div class="fcol">
           <h5>Download</h5>
-          <a href="coxe-mod.jar" download class="magnet" data-dl="Coxe Mod 1.21.11">coxe-mod.jar</a>
-          <a href="coxe-mod-1.8.9.jar" download class="magnet" data-dl="Coxe Mod 1.8.9 Forge">coxe-mod-1.8.9.jar</a>
+          <a href="coxe-mod.jar" download class="magnet" data-dl="Coxe Internal 1.21.11">coxe-mod.jar</a>
+          <a href="coxe-mod-1.8.9.jar" download class="magnet" data-dl="Coxe Internal 1.8.9">coxe-mod-1.8.9.jar</a>
+          <a href="coxe-internal.exe" download class="magnet" data-dl="Coxe Internal Loader">coxe-internal.exe</a>
           <a href="coxe-external.exe" download class="magnet" data-dl="Coxe External">coxe-external.exe</a>
         </div>
         <div class="fcol">
@@ -1586,6 +2135,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
   /* --- saved configs --- */
   function savedCfgs(){ return LS.get('coxe-saved-cfgs', []); }
   function paintSaved(){
+    if (!$('#savedList')) return;
     const list = savedCfgs();
     $('#savedList').innerHTML = list.length ? list.map((c, i) =>
       '<div class="savedrow"><span class="nm">' + c.name.replace(/</g,'&lt;') + '</span>' +
@@ -1670,11 +2220,11 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
     $('#mVals').textContent = custom;
     $('#mCats').textContent = cats.size;
     const code = makeCode();
-    $('#cfgCode').value = code;
-    $('#mLen').textContent = code.length;
     const hudOn = hudBridge.ready ? hudBridge.els.filter(e => hudBridge.state[e.id].on).length : 0;
-    $('#cfgInfo').textContent = on.length + ' modules on · ' + hudOn + ' HUD elements · ' + custom +
-      ' custom values · schema 1 · ' + code.length + ' chars';
+    if ($('#mLen')) $('#mLen').textContent = hudOn;
+    if ($('#cfgCode')) $('#cfgCode').value = code;
+    if ($('#cfgInfo')) $('#cfgInfo').textContent = on.length + ' modules on · ' + hudOn + ' HUD elements · ' +
+      custom + ' custom values · schema 1 · ' + code.length + ' chars';
     paintOverlay(on);
     persistModules();
     paintSavedIfNeeded();
@@ -1763,23 +2313,7 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
     toast('Everything reset to defaults');
   });
 
-  /* --- presets + saved --- */
-  $('#presets').innerHTML = Object.keys(PRESETS).map(p => '<button class="preset" data-preset="' + p + '">' + p + '</button>').join('');
-  $$('#presets .preset').forEach(b => b.addEventListener('click', () => applyPreset(b.dataset.preset)));
-
-  $('#cfgName').addEventListener('input', () => { refreshStats(); });
-  $('#saveCfg').addEventListener('click', () => {
-    const name = ($('#cfgName').value || '').trim();
-    if (!name){ toast('Give the config a name first'); $('#cfgName').focus(); return; }
-    const list = savedCfgs().filter(c => c.name !== name);
-    list.unshift({ name:name, code:makeCode(), ts:Date.now() });
-    LS.set('coxe-saved-cfgs', list.slice(0, 12));
-    $('#cfgName').value = '';
-    paintSaved();
-    toast('Saved “' + name + '”');
-  });
-
-  /* --- copy / share / import --- */
+  /* --- copy helper (used by the HUD editor) --- */
   async function copyText(text, okMsg){
     try { await navigator.clipboard.writeText(text); toast(okMsg); }
     catch(e){
@@ -1789,31 +2323,6 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
       tmp.remove();
     }
   }
-  $('#copyCfg').addEventListener('click', () => copyText(makeCode(), 'Config code copied'));
-  $('#copyLink').addEventListener('click', () => {
-    const url = location.origin + location.pathname + '?cfg=' + encodeURIComponent(makeCode());
-    copyText(url, 'Share link copied — it opens with your config');
-  });
-  $('#openImport').addEventListener('click', () => {
-    const box = $('#importBox');
-    box.hidden = !box.hidden;
-    if (!box.hidden) $('#importInput').focus();
-  });
-  $('#cancelImport').addEventListener('click', () => { $('#importBox').hidden = true; $('#importDiff').textContent = ''; });
-  $('#applyImport').addEventListener('click', () => {
-    const parsed = parseCode($('#importInput').value);
-    if (!parsed){ $('#importDiff').textContent = 'That code could not be read.'; return; }
-    if (parsed.__err){ $('#importDiff').textContent = parsed.__err; return; }
-    const r = applyParsed(parsed, false);
-    if (!r){ $('#importDiff').textContent = 'That code could not be read.'; return; }
-    const scopeTxt = r.scope === '*' ? 'complete profile'
-      : r.scope ? r.scope + ' only'
-      : 'modules only';
-    $('#importDiff').textContent = r.turnedOn + ' on · ' + r.turnedOff + ' off · ' + r.vals +
-      ' values' + (r.hud ? ' · ' + r.hud + ' HUD fields' : '') + ' · ' + scopeTxt;
-    refreshStats();
-    toast('Config applied' + (r.name ? ' · “' + r.name + '”' : ''));
-  });
 
   /* hero stats */
   $('#statModules').textContent = MODULES.length;
@@ -2134,9 +2643,9 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
      ============================================================ */
   const MOD_DATA = {
     '1.21.11': { file:'coxe-mod.jar', game:'1.21.11', loader:'Fabric + Fabric API', java:'21+',
-                 dl:'Coxe Mod 1.21.11', note:'Drop it in <code>.minecraft/mods</code> and launch Fabric 1.21.11' },
+                 dl:'Coxe Internal 1.21.11', note:'Drop it in <code>.minecraft/mods</code> and launch Fabric 1.21.11' },
     '1.8.9':   { file:'coxe-mod-1.8.9.jar', game:'1.8.9', loader:'Forge 11.15.1.2318', java:'8+',
-                 dl:'Coxe Mod 1.8.9 Forge', note:'Drop it in <code>.minecraft/mods</code> and launch your Forge 1.8.9 profile' }
+                 dl:'Coxe Internal 1.8.9', note:'Drop it in <code>.minecraft/mods</code> and launch your Forge 1.8.9 profile' }
   };
   function pickVer(ver){
     const d = MOD_DATA[ver]; if (!d) return;
@@ -2289,29 +2798,73 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
      6. SETUP TABS
      ============================================================ */
   const OS = {
-    win: [
-      { h:'Get the right file', p:'Forge 1.8.9 → <code>coxe-mod-1.8.9.jar</code>. Fabric 1.21.11 → <code>coxe-mod.jar</code>. Anything 1.20 – 1.21.11 or CraftRise → <code>coxe-external.exe</code>.' },
-      { h:'Put it in place', p:'Mod: drop the jar into <code>%appdata%\\.minecraft\\mods</code> and start your Forge or Fabric profile. External: just run the exe.' },
-      { h:'Press your GUI key', p:'In game, open the ClickGUI and toggle what you need. Right Shift is the default.' }
-    ],
-    mac: [
-      { h:'Get the right file', p:'macOS uses the Mod: <code>coxe-mod.jar</code> for Fabric 1.21.11 or <code>coxe-mod-1.8.9.jar</code> for Forge 1.8.9. The External is Windows only.' },
-      { h:'Put it in place', p:'Drop the jar into <code>~/Library/Application Support/minecraft/mods</code> (or your launcher profile folder), then start the matching profile.' },
-      { h:'Press your GUI key', p:'Open the ClickGUI in game and configure modules. Right Shift is the default.' }
-    ],
-    linux: [
-      { h:'Get the right file', p:'Linux uses the Mod: <code>coxe-mod.jar</code> (Fabric 1.21.11) or <code>coxe-mod-1.8.9.jar</code> (Forge 1.8.9).' },
-      { h:'Put it in place', p:'Copy the jar into <code>~/.minecraft/mods</code>, then launch the matching Forge or Fabric profile.' },
-      { h:'Press your GUI key', p:'Open the ClickGUI and toggle modules. Right Shift is the default.' }
-    ]
+    win: {
+      mod: [
+        { h:'Install a loader', p:'Fabric 1.21.11 → <b>Fabric Loader</b> + <b>Fabric API</b>. Forge 1.8.9 → <b>Forge 11.15.1.2318</b>. Create the profile in your launcher.' },
+        { h:'Drop the jar in mods', p:'Copy <code>coxe-mod.jar</code> or <code>coxe-mod-1.8.9.jar</code> into <code>%appdata%\\.minecraft\\mods</code>.' },
+        { h:'Press your GUI key', p:'Start that profile, join a world and press <b>Right Shift</b>. Toggle what you need and export the config code.' }
+      ],
+      exe: [
+        { h:'Run the exe', p:'<code>coxe-internal.exe</code> (full client loader) or <code>coxe-external.exe</code> (overlay for 1.20 – 1.21.11 and CraftRise). Windows 10/11, nothing to install.' },
+        { h:'Point it at the game', p:'Internal loader: choose your Minecraft install and hit <b>Start</b>. External: just leave it running and open Minecraft or CraftRise yourself.' },
+        { h:'Press your GUI key', p:'Back in game press <b>Right Shift</b>. Same menu, same config code as the jar builds.' }
+      ]
+    },
+    mac: {
+      mod: [
+        { h:'Install a loader', p:'Fabric 1.21.11 → <b>Fabric Loader</b> + <b>Fabric API</b>. Forge 1.8.9 → <b>Forge</b>. Create the profile in your launcher.' },
+        { h:'Drop the jar in mods', p:'Copy the jar into <code>~/Library/Application Support/minecraft/mods</code> (or your launcher profile folder).' },
+        { h:'Press your GUI key', p:'Start the matching profile and press <b>Right Shift</b> in game.' }
+      ],
+      exe: [
+        { h:'Windows only', p:'The exe builds are Windows 10/11. On macOS use the <b>Mod</b> tab instead — both jars run fine on Apple Silicon and Intel.' },
+        { h:'Use the jar route', p:'Install Fabric or Forge for your version, drop the matching jar into <code>mods</code>, start the profile.' },
+        { h:'Same everything else', p:'GUI key, modules and config codes are identical, so a setup you export on Windows opens here.' }
+      ]
+    },
+    linux: {
+      mod: [
+        { h:'Install a loader', p:'Fabric 1.21.11 → <b>Fabric Loader</b> + <b>Fabric API</b>. Forge 1.8.9 → <b>Forge</b> for that version.' },
+        { h:'Drop the jar in mods', p:'Copy the jar into <code>~/.minecraft/mods</code> and start the matching profile.' },
+        { h:'Press your GUI key', p:'Press <b>Right Shift</b> in game to open the ClickGUI.' }
+      ],
+      exe: [
+        { h:'Windows only', p:'The exe builds are Windows 10/11. On Linux take the <b>Mod</b> tab — the jars are the supported path.' },
+        { h:'Use the jar route', p:'Install Fabric or Forge for your version, drop the jar into <code>~/.minecraft/mods</code>.' },
+        { h:'Same everything else', p:'Config codes and the HUD layout are portable between the jar and exe builds.' }
+      ]
+    }
   };
+  let buildMode = LS.get('coxe-buildmode', 'mod') === 'exe' ? 'exe' : 'mod';
   function renderOS(os){
-    $('#osSteps').innerHTML = OS[os].map(s => '<div class="step"><h4>' + s.h + '</h4><p>' + s.p + '</p></div>').join('');
+    $('#osSteps').innerHTML = OS[os][buildMode].map(s => '<div class="step"><h4>' + s.h + '</h4><p>' + s.p + '</p></div>').join('');
     $$('#osTabs button').forEach(b => b.classList.toggle('on', b.dataset.os === os));
     LS.set('coxe-os', os);
   }
+  function setBuildMode(mode, os){
+    buildMode = mode === 'exe' ? 'exe' : 'mod';
+    LS.set('coxe-buildmode', buildMode);
+    $$('[data-buildmode]').forEach(b => {
+      const on = b.dataset.buildmode === buildMode;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    $$('.bmPane').forEach(pane => { pane.hidden = pane.dataset.pane !== buildMode; });
+    const hint = $('#bmHint');
+    if (hint) hint.innerHTML = buildMode === 'mod'
+      ? 'Pick the jar for your loader — Minecraft runs the client from inside the game.'
+      : 'Run a single exe next to the game — the internal loader for the full client, external for CraftRise and any 1.20+ version.';
+    const st = $('#setupTitle'), sl = $('#setupLede');
+    if (st) st.textContent = buildMode === 'mod' ? 'Three steps with the Mod' : 'Three steps with the Exe';
+    if (sl) sl.textContent = buildMode === 'mod'
+      ? 'Jar in the mods folder, loader installed, GUI key bound. Pick Exe above and these steps change with it.'
+      : 'One exe, no loader and no profile to edit. Pick Mod above if you would rather run the jar inside the game.';
+    renderOS(os || LS.get('coxe-os', 'win'));
+  }
+  $$('[data-buildmode]').forEach(b => b.addEventListener('click', () => setBuildMode(b.dataset.buildmode)));
+
   $$('#osTabs button').forEach(b => b.addEventListener('click', () => renderOS(b.dataset.os)));
-  renderOS(LS.get('coxe-os', 'win'));
+  setBuildMode(buildMode, LS.get('coxe-os', 'win'));
 
   /* ============================================================
      7. FAQ / TOAST / NAV / SCROLL
@@ -2371,6 +2924,96 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
   refreshOpts();
   paintOverlay();
 
+  /* ============================================================
+     HERO MEDIA — promo loop with graceful poster fallback
+     ============================================================ */
+  (function heroMedia(){
+    const shot = $('#heroShot'), vid = $('#heroVideo');
+    if (!shot || !vid) return;
+    const toggle = $('#heroVidToggle'), sound = $('#heroVidSound');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const setPlaying = on => {
+      shot.classList.toggle('playing', on);
+      if (toggle) toggle.innerHTML = on
+        ? '<svg viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>'
+        : '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+      if (toggle) toggle.setAttribute('aria-label', on ? 'Pause the promo loop' : 'Play the promo loop');
+    };
+
+    vid.addEventListener('playing', () => setPlaying(true));
+    vid.addEventListener('pause', () => setPlaying(false));
+    vid.addEventListener('error', () => setPlaying(false));
+
+    function tryPlay(){
+      const pr = vid.play();
+      if (pr && pr.catch) pr.catch(() => setPlaying(false));
+    }
+    vid.muted = true;
+    if (!reduce) tryPlay();
+
+    if (toggle) toggle.addEventListener('click', () => {
+      if (vid.paused) tryPlay(); else vid.pause();
+    });
+    if (sound) sound.addEventListener('click', () => {
+      vid.muted = !vid.muted;
+      sound.setAttribute('aria-pressed', vid.muted ? 'false' : 'true');
+      if (!vid.muted) tryPlay();
+      toast(vid.muted ? 'Promo muted' : 'Promo sound on');
+    });
+
+    /* pause while the tab is hidden or the hero is off screen */
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) vid.pause();
+    });
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(es => {
+        es.forEach(en => {
+          if (!en.isIntersecting && !vid.paused) vid.pause();
+          else if (en.isIntersecting && !reduce && vid.paused && !vid.dataset.userPaused) tryPlay();
+        });
+      }, { threshold:.15 }).observe(shot);
+    }
+    if (toggle) toggle.addEventListener('click', () => { vid.dataset.userPaused = vid.paused ? '' : '1'; });
+  })();
+
+  /* ============================================================
+     VIEW ROUTER — site ⇄ config studio (single file)
+     ============================================================ */
+  const SITE_TITLE = document.title;
+  const studioPage = $('#studioPage');
+  function setView(v){
+    const studio = v === 'studio';
+    document.body.classList.toggle('view-studio', studio);
+    if (studioPage) studioPage.hidden = !studio;
+    if (studio){
+      document.title = 'Coxe / Config Studio';
+      if (window.CoxeStudio) { try { window.CoxeStudio.render(); } catch(e){} }
+      scrollTo({ top:0, behavior:'instant' });
+    } else {
+      document.title = SITE_TITLE;
+    }
+    const backBtn = $('#toTop');
+    if (backBtn) backBtn.classList.remove('show');
+  }
+  document.addEventListener('click', e => {
+    const link = e.target.closest('[data-studio-link]');
+    if (link){
+      e.preventDefault();
+      try { history.pushState(null, '', '#studio'); } catch(err){}
+      setView('studio');
+      return;
+    }
+    const back = e.target.closest('[data-back]');
+    if (back){
+      e.preventDefault();
+      try { history.pushState(null, '', location.pathname + location.search); } catch(err){}
+      setView('site');
+    }
+  });
+  addEventListener('popstate', () => setView(location.hash === '#studio' ? 'studio' : 'site'));
+  if (location.hash === '#studio') setView('studio');
+
   /* shared ?cfg= link */
   if (/[?&]cfg=/.test(location.search)){
     const linkCfg = parseCode(location.search);
@@ -2383,5 +3026,99 @@ footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 2
   }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a51a08d8c8afe33f',t:'MTc5MzE5MTQ5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>
+(function(){
+/* SCHEMA:START */
+const schema={"target":"coxe-native/1","palette":["#ffffff","#5b8cff","#3ecf8e","#ffd166","#ff7b7b"],"modules":[{"id":"esp","title":"ESP","category":"Render","native":0,"kind":"module"},{"id":"tracers","title":"Tracers","category":"Render","native":1,"kind":"module"},{"id":"nametags","title":"Nametags","category":"Render","native":2,"kind":"module"},{"id":"chams","title":"Chams","category":"Render","native":3,"kind":"module"},{"id":"fullbright","title":"FullBright","category":"Render","native":4,"kind":"module"},{"id":"storageesp","title":"StorageESP","category":"Render","native":5,"kind":"module"},{"id":"holeesp","title":"HoleESP","category":"Render","native":6,"kind":"module"},{"id":"itemesp","title":"ItemESP","category":"Render","native":7,"kind":"module"},{"id":"zoom","title":"Zoom","category":"Render","native":8,"kind":"module"},{"id":"cameraclip","title":"CameraClip","category":"Render","native":9,"kind":"module"},{"id":"speed","title":"Speed","category":"Player","native":10,"kind":"module"},{"id":"fly","title":"Fly","category":"Player","native":11,"kind":"module"},{"id":"autojump","title":"AutoJump","category":"Player","native":12,"kind":"module"},{"id":"step","title":"Step","category":"Player","native":13,"kind":"module"},{"id":"nofall","title":"NoFall","category":"Player","native":14,"kind":"module"},{"id":"safewalk","title":"SafeWalk","category":"Player","native":15,"kind":"module"},{"id":"noslow","title":"NoSlow","category":"Player","native":16,"kind":"module"},{"id":"sprint","title":"Sprint","category":"Player","native":17,"kind":"module"},{"id":"antivoid","title":"AntiVoid","category":"Player","native":18,"kind":"module"},{"id":"freecam","title":"Freecam","category":"Player","native":19,"kind":"module"},{"id":"killaura","title":"KillAura","category":"Combat","native":20,"kind":"module"},{"id":"reach","title":"Reach","category":"Combat","native":21,"kind":"module"},{"id":"autoclicker","title":"AutoClicker","category":"Combat","native":22,"kind":"module"},{"id":"criticals","title":"Criticals","category":"Combat","native":23,"kind":"module"},{"id":"velocity","title":"Velocity","category":"Combat","native":24,"kind":"module"},{"id":"aimassist","title":"AimAssist","category":"Combat","native":25,"kind":"module"},{"id":"autototem","title":"AutoTotem","category":"Combat","native":26,"kind":"module"},{"id":"hitbox","title":"HitBoxes","category":"Combat","native":27,"kind":"module"},{"id":"antikb","title":"AntiKB","category":"Combat","native":28,"kind":"module"},{"id":"autoblock","title":"AutoBlock","category":"Combat","native":29,"kind":"module"},{"id":"scaffold","title":"Scaffold","category":"World","native":30,"kind":"module"},{"id":"fastplace","title":"FastPlace","category":"World","native":31,"kind":"module"},{"id":"nuker","title":"Nuker","category":"World","native":32,"kind":"module"},{"id":"autotool","title":"AutoTool","category":"World","native":33,"kind":"module"},{"id":"cheststealer","title":"ChestStealer","category":"World","native":34,"kind":"module"},{"id":"xray","title":"XRay","category":"World","native":35,"kind":"module"},{"id":"lightdebug","title":"LightDebug","category":"World","native":36,"kind":"module"},{"id":"autofarm","title":"AutoFarm","category":"World","native":37,"kind":"module"},{"id":"config","title":"Config","category":"Misc","native":38,"kind":"module"},{"id":"teams","title":"Teams","category":"Misc","native":39,"kind":"module"},{"id":"friends","title":"Friends","category":"Misc","native":40,"kind":"module"},{"id":"shielddelay","title":"ShieldDelay","category":"Misc","native":41,"kind":"module"},{"id":"pingspoof","title":"PingSpoof","category":"Misc","native":42,"kind":"module"},{"id":"antiafk","title":"AntiAFK","category":"Misc","native":43,"kind":"module"},{"id":"nameprotect","title":"NameProtect","category":"Misc","native":44,"kind":"module"},{"id":"discordrpc","title":"DiscordRPC","category":"Misc","native":45,"kind":"module"},{"id":"autoreconnect","title":"Autoreconnect","category":"Misc","native":46,"kind":"module"},{"id":"arraylist","title":"Arraylist","category":"HUD","native":47,"kind":"module"},{"id":"coords","title":"Coords","category":"HUD","native":48,"kind":"module"},{"id":"fps","title":"FPS Counter","category":"HUD","native":49,"kind":"module"},{"id":"pinghud","title":"Ping Counter","category":"HUD","native":50,"kind":"module"},{"id":"keystrokes","title":"Keystrokes","category":"HUD","native":51,"kind":"module"},{"id":"armor","title":"ArmorStatus","category":"HUD","native":52,"kind":"module"},{"id":"potions","title":"PotionStatus","category":"HUD","native":53,"kind":"module"},{"id":"combo","title":"ComboCounter","category":"HUD","native":54,"kind":"module"},{"id":"watermark","title":"Watermark","category":"HUD","native":55,"kind":"module"},{"id":"menu","title":"Menu key","category":"Interface","native":56,"kind":"module"},{"id":"hud","title":"HUD / whole layout","category":"HUD layout","native":57,"kind":"hud-all"},{"id":"hud_fps","title":"FPS Counter","category":"HUD layout","native":58,"kind":"hud"},{"id":"hud_coords","title":"Coordinates","category":"HUD layout","native":59,"kind":"hud"},{"id":"hud_alist","title":"Arraylist","category":"HUD layout","native":60,"kind":"hud"},{"id":"hud_ping","title":"Ping","category":"HUD layout","native":61,"kind":"hud"},{"id":"hud_keys","title":"Keystrokes","category":"HUD layout","native":62,"kind":"hud"},{"id":"hud_watermark","title":"Watermark","category":"HUD layout","native":63,"kind":"hud"},{"id":"hud_armor","title":"Armor Status","category":"HUD layout","native":64,"kind":"hud"},{"id":"hud_potions","title":"Potion Status","category":"HUD layout","native":65,"kind":"hud"},{"id":"hud_combo","title":"Combo","category":"HUD layout","native":66,"kind":"hud"},{"id":"hud_cps","title":"CPS","category":"HUD layout","native":67,"kind":"hud"}],"fields":[{"id":"esp.enabled","module":"esp","title":"Requested state","kind":"state","min":0,"max":1,"default":1},{"id":"esp.range","module":"esp","title":"Range / m","kind":"integer","min":8,"max":96,"step":2,"default":48},{"id":"esp.mode","module":"esp","title":"Mode / Box, Outline, Glow","kind":"integer","min":0,"max":2,"default":0,"opts":["Box","Outline","Glow"]},{"id":"tracers.enabled","module":"tracers","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"tracers.range","module":"tracers","title":"Range / m","kind":"integer","min":8,"max":96,"step":2,"default":48},{"id":"tracers.width","module":"tracers","title":"Width / px","kind":"integer","min":1,"max":4,"step":1,"default":1},{"id":"nametags.enabled","module":"nametags","title":"Requested state","kind":"state","min":0,"max":1,"default":1},{"id":"nametags.scale","module":"nametags","title":"Scale / %","kind":"integer","min":60,"max":160,"step":5,"default":100},{"id":"nametags.health","module":"nametags","title":"Health bar / On, Off","kind":"integer","min":0,"max":1,"default":0,"opts":["On","Off"]},{"id":"chams.enabled","module":"chams","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"chams.alpha","module":"chams","title":"Opacity / %","kind":"integer","min":10,"max":100,"step":5,"default":70},{"id":"fullbright.enabled","module":"fullbright","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"fullbright.gamma","module":"fullbright","title":"Gamma / x","kind":"integer","min":1,"max":20,"step":1,"default":10},{"id":"storageesp.enabled","module":"storageesp","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"storageesp.tracers","module":"storageesp","title":"Tracers / Off, On","kind":"integer","min":0,"max":1,"default":0,"opts":["Off","On"]},{"id":"holeesp.enabled","module":"holeesp","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"holeesp.range","module":"holeesp","title":"Range / m","kind":"integer","min":2,"max":24,"step":1,"default":8},{"id":"itemesp.enabled","module":"itemesp","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"itemesp.range","module":"itemesp","title":"Range / m","kind":"integer","min":4,"max":48,"step":2,"default":16},{"id":"zoom.enabled","module":"zoom","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"zoom.fov","module":"zoom","title":"FOV / °","kind":"integer","min":10,"max":70,"step":5,"default":35},{"id":"cameraclip.enabled","module":"cameraclip","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"speed.enabled","module":"speed","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"speed.mul","module":"speed","title":"Multiplier / %","kind":"integer","min":100,"max":400,"step":10,"default":150},{"id":"fly.enabled","module":"fly","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"fly.speed","module":"fly","title":"Speed / b/s","kind":"integer","min":4,"max":24,"step":1,"default":10},{"id":"autojump.enabled","module":"autojump","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"step.enabled","module":"step","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"step.height","module":"step","title":"Height / b","kind":"integer","min":1,"max":2,"step":1,"default":1},{"id":"nofall.enabled","module":"nofall","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"safewalk.enabled","module":"safewalk","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"noslow.enabled","module":"noslow","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"sprint.enabled","module":"sprint","title":"Requested state","kind":"state","min":0,"max":1,"default":1},{"id":"antivoid.enabled","module":"antivoid","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"freecam.enabled","module":"freecam","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"killaura.enabled","module":"killaura","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"killaura.range","module":"killaura","title":"Range / b","kind":"number","min":1,"max":6,"step":0.2,"default":3.6},{"id":"killaura.mode","module":"killaura","title":"Mode / Single, Switch, Multi","kind":"integer","min":0,"max":2,"default":0,"opts":["Single","Switch","Multi"]},{"id":"killaura.aps","module":"killaura","title":"Attacks/s / /s","kind":"integer","min":2,"max":20,"step":1,"default":10},{"id":"reach.enabled","module":"reach","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"reach.blocks","module":"reach","title":"Blocks / b","kind":"number","min":3,"max":8,"step":0.5,"default":5.5},{"id":"autoclicker.enabled","module":"autoclicker","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"autoclicker.cps","module":"autoclicker","title":"CPS / cps","kind":"integer","min":1,"max":20,"step":1,"default":12},{"id":"autoclicker.jitter","module":"autoclicker","title":"Jitter / %","kind":"integer","min":0,"max":60,"step":5,"default":20},{"id":"criticals.enabled","module":"criticals","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"velocity.enabled","module":"velocity","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"velocity.hor","module":"velocity","title":"Horizontal / %","kind":"integer","min":0,"max":100,"step":5,"default":0},{"id":"velocity.ver","module":"velocity","title":"Vertical / %","kind":"integer","min":0,"max":100,"step":5,"default":0},{"id":"aimassist.enabled","module":"aimassist","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"aimassist.speed","module":"aimassist","title":"Speed / %","kind":"integer","min":5,"max":100,"step":5,"default":30},{"id":"aimassist.range","module":"aimassist","title":"Range / b","kind":"number","min":1,"max":8,"step":0.5,"default":4},{"id":"autototem.enabled","module":"autototem","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"hitbox.enabled","module":"hitbox","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"hitbox.expand","module":"hitbox","title":"Expand / b","kind":"number","min":0,"max":0.5,"step":0.05,"default":0.1},{"id":"antikb.enabled","module":"antikb","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"autoblock.enabled","module":"autoblock","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"scaffold.enabled","module":"scaffold","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"scaffold.delay","module":"scaffold","title":"Delay / t","kind":"integer","min":0,"max":5,"step":1,"default":1},{"id":"fastplace.enabled","module":"fastplace","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"nuker.enabled","module":"nuker","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"nuker.range","module":"nuker","title":"Range / b","kind":"integer","min":1,"max":8,"step":1,"default":4},{"id":"autotool.enabled","module":"autotool","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"cheststealer.enabled","module":"cheststealer","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"cheststealer.delay","module":"cheststealer","title":"Delay / ms","kind":"integer","min":0,"max":200,"step":10,"default":50},{"id":"xray.enabled","module":"xray","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"xray.opacity","module":"xray","title":"Opacity / %","kind":"integer","min":10,"max":100,"step":10,"default":40},{"id":"lightdebug.enabled","module":"lightdebug","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"autofarm.enabled","module":"autofarm","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"config.enabled","module":"config","title":"Requested state","kind":"state","min":0,"max":1,"default":1},{"id":"teams.enabled","module":"teams","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"friends.enabled","module":"friends","title":"Requested state","kind":"state","min":0,"max":1,"default":1},{"id":"shielddelay.enabled","module":"shielddelay","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"shielddelay.delay","module":"shielddelay","title":"Delay / t","kind":"integer","min":0,"max":5,"step":1,"default":0},{"id":"pingspoof.enabled","module":"pingspoof","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"pingspoof.ping","module":"pingspoof","title":"Ping / ms","kind":"integer","min":0,"max":300,"step":5,"default":20},{"id":"antiafk.enabled","module":"antiafk","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"nameprotect.enabled","module":"nameprotect","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"discordrpc.enabled","module":"discordrpc","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"autoreconnect.enabled","module":"autoreconnect","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"arraylist.enabled","module":"arraylist","title":"Requested state","kind":"state","min":0,"max":1,"default":1},{"id":"coords.enabled","module":"coords","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"fps.enabled","module":"fps","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"pinghud.enabled","module":"pinghud","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"keystrokes.enabled","module":"keystrokes","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"armor.enabled","module":"armor","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"potions.enabled","module":"potions","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"combo.enabled","module":"combo","title":"Requested state","kind":"state","min":0,"max":1,"default":0},{"id":"watermark.enabled","module":"watermark","title":"Requested state","kind":"state","min":0,"max":1,"default":1},{"id":"menu.key","module":"menu","title":"GUI key / Windows VK (161 = Right Shift)","kind":"key","min":0,"max":255,"default":161},{"id":"hud.fps.on","module":"hud_fps","title":"Show FPS Counter","kind":"bool","min":0,"max":1,"default":1},{"id":"hud.fps.x","module":"hud_fps","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.03},{"id":"hud.fps.y","module":"hud_fps","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.05},{"id":"hud.fps.scale","module":"hud_fps","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.fps.color","module":"hud_fps","title":"Colour","kind":"integer","min":0,"max":4,"default":0,"opts":["White","Blue","Green","Amber","Red"]},{"id":"hud.coords.on","module":"hud_coords","title":"Show Coordinates","kind":"bool","min":0,"max":1,"default":1},{"id":"hud.coords.x","module":"hud_coords","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.03},{"id":"hud.coords.y","module":"hud_coords","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.16},{"id":"hud.coords.scale","module":"hud_coords","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.coords.color","module":"hud_coords","title":"Colour","kind":"integer","min":0,"max":4,"default":0,"opts":["White","Blue","Green","Amber","Red"]},{"id":"hud.alist.on","module":"hud_alist","title":"Show Arraylist","kind":"bool","min":0,"max":1,"default":1},{"id":"hud.alist.x","module":"hud_alist","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.86},{"id":"hud.alist.y","module":"hud_alist","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.05},{"id":"hud.alist.scale","module":"hud_alist","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.alist.color","module":"hud_alist","title":"Colour","kind":"integer","min":0,"max":4,"default":1,"opts":["White","Blue","Green","Amber","Red"]},{"id":"hud.ping.on","module":"hud_ping","title":"Show Ping","kind":"bool","min":0,"max":1,"default":1},{"id":"hud.ping.x","module":"hud_ping","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.86},{"id":"hud.ping.y","module":"hud_ping","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.82},{"id":"hud.ping.scale","module":"hud_ping","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.ping.color","module":"hud_ping","title":"Colour","kind":"integer","min":0,"max":4,"default":2,"opts":["White","Blue","Green","Amber","Red"]},{"id":"hud.keys.on","module":"hud_keys","title":"Show Keystrokes","kind":"bool","min":0,"max":1,"default":0},{"id":"hud.keys.x","module":"hud_keys","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.03},{"id":"hud.keys.y","module":"hud_keys","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.84},{"id":"hud.keys.scale","module":"hud_keys","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.keys.color","module":"hud_keys","title":"Colour","kind":"integer","min":0,"max":4,"default":0,"opts":["White","Blue","Green","Amber","Red"]},{"id":"hud.watermark.on","module":"hud_watermark","title":"Show Watermark","kind":"bool","min":0,"max":1,"default":0},{"id":"hud.watermark.x","module":"hud_watermark","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.44},{"id":"hud.watermark.y","module":"hud_watermark","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.05},{"id":"hud.watermark.scale","module":"hud_watermark","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.watermark.color","module":"hud_watermark","title":"Colour","kind":"integer","min":0,"max":4,"default":3,"opts":["White","Blue","Green","Amber","Red"]},{"id":"hud.armor.on","module":"hud_armor","title":"Show Armor Status","kind":"bool","min":0,"max":1,"default":0},{"id":"hud.armor.x","module":"hud_armor","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.44},{"id":"hud.armor.y","module":"hud_armor","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.84},{"id":"hud.armor.scale","module":"hud_armor","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.armor.color","module":"hud_armor","title":"Colour","kind":"integer","min":0,"max":4,"default":0,"opts":["White","Blue","Green","Amber","Red"]},{"id":"hud.potions.on","module":"hud_potions","title":"Show Potion Status","kind":"bool","min":0,"max":1,"default":0},{"id":"hud.potions.x","module":"hud_potions","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.03},{"id":"hud.potions.y","module":"hud_potions","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.28},{"id":"hud.potions.scale","module":"hud_potions","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.potions.color","module":"hud_potions","title":"Colour","kind":"integer","min":0,"max":4,"default":2,"opts":["White","Blue","Green","Amber","Red"]},{"id":"hud.combo.on","module":"hud_combo","title":"Show Combo","kind":"bool","min":0,"max":1,"default":0},{"id":"hud.combo.x","module":"hud_combo","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.7},{"id":"hud.combo.y","module":"hud_combo","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.28},{"id":"hud.combo.scale","module":"hud_combo","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.combo.color","module":"hud_combo","title":"Colour","kind":"integer","min":0,"max":4,"default":4,"opts":["White","Blue","Green","Amber","Red"]},{"id":"hud.cps.on","module":"hud_cps","title":"Show CPS","kind":"bool","min":0,"max":1,"default":0},{"id":"hud.cps.x","module":"hud_cps","title":"Horizontal position / normalized","kind":"number","min":0,"max":1,"default":0.7},{"id":"hud.cps.y","module":"hud_cps","title":"Vertical position / normalized","kind":"number","min":0,"max":1,"default":0.4},{"id":"hud.cps.scale","module":"hud_cps","title":"Scale","kind":"number","min":0.7,"max":1.5,"default":1},{"id":"hud.cps.color","module":"hud_cps","title":"Colour","kind":"integer","min":0,"max":4,"default":0,"opts":["White","Blue","Green","Amber","Red"]}]};
+/* SCHEMA:END */
+
+/* SCHEMA:START */
+/* SCHEMA:END */
+const fields=new Map(schema.fields.map(f=>[f.id,f]));const modules=new Map(schema.modules.map(m=>[m.id,m]));const values=Object.fromEntries(schema.fields.map(f=>[f.id,f.default]));const invalid=new Set(),edits={};let selected='killaura',filter='',preview=null,undo=null;
+const $=id=>document.getElementById(id);
+function crc(s){let c=0xffffffff;for(let i=0;i<s.length;i++){c^=s.charCodeAt(i);for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xedb88320:0);}return ((c^0xffffffff)>>>0).toString(16).padStart(8,'0');}
+function nameValid(s){return typeof s==='string'&&/^[A-Za-z0-9 _-]{1,32}$/.test(s);}
+function valid(f,x){return Number.isFinite(x)&&x>=f.min&&x<=f.max&&(f.kind==='number'||Number.isInteger(x))&&(f.kind!=='key'||![16,17,18].includes(x));}
+function validate(p){if(p.scope!=='*'&&p.scope!=='hud'&&!modules.has(p.scope))throw Error('Unknown module scope.');if(!nameValid(p.name))throw Error('Use 1–32 letters, digits, spaces, dash or underscore for the name.');const entries=Object.entries(p.values);if(!entries.length||entries.length>fields.size)throw Error('Empty or oversized config.');for(const [id,v] of entries){const f=fields.get(id);if(!f)throw Error('Unknown field: '+id);if(p.scope==='hud'){if(id.slice(0,4)!=='hud.')throw Error('Field outside HUD scope: '+id);}else if(p.scope!=='*'&&p.scope!==f.module)throw Error('Field outside module scope: '+id);if(!valid(f,v))throw Error('Invalid or out-of-range value: '+id);}}
+function encode(p){validate(p);let raw='coxe-native/1\nscope='+p.scope+'\nname='+p.name+'\n';for(const k of Object.keys(p.values).sort())raw+=k+'='+Number(p.values[k].toPrecision(15))+'\n';return 'CX2.'+btoa(raw).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')+'.'+crc(raw);}
+function decode(code){code=code.trim();if(code.length>32768)throw Error('Code exceeds 32 KiB.');const match=/^CX2\.([A-Za-z0-9_-]+)\.([a-f0-9]{8})$/.exec(code);if(!match)throw Error('Expected a CX2 native config code.');if(match[1].length%4===1)throw Error('Invalid base64url.');let raw;try{raw=atob(match[1].replace(/-/g,'+').replace(/_/g,'/'));}catch{throw Error('Invalid base64url.');}if(btoa(raw).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')!==match[1])throw Error('Noncanonical base64url.');if(crc(raw)!==match[2])throw Error('Checksum mismatch. The code may be truncated or changed.');if(raw.length>24000||!raw.startsWith('coxe-native/1\n'))throw Error('Wrong target or unsupported schema.');const lines=raw.split('\n');if(lines.at(-1)==='')lines.pop();if(!lines[1]?.startsWith('scope=')||!lines[2]?.startsWith('name='))throw Error('Missing scope or name.');const p={scope:lines[1].slice(6),name:lines[2].slice(5),values:{}};for(const line of lines.slice(3)){const i=line.indexOf('=');if(i<0)throw Error('Malformed field.');const k=line.slice(0,i),s=line.slice(i+1);if(Object.hasOwn(p.values,k))throw Error('Duplicate field: '+k);if(!/^[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(s)||s.length>40)throw Error('Invalid number: '+k);p.values[k]=Number(s);}validate(p);return p;}
+function status(text,error=false){$('status').textContent=text;$('status').className=error?'status error':'status';}
+function chosen(){return schema.fields.filter(f=>selected==='*'?(true):selected==='hud'?f.id.slice(0,4)==='hud.':f.module===selected);}
+function snapshot(){const p={scope:selected,name:$('name').value,values:{}};for(const f of chosen())p.values[f.id]=values[f.id];return p;}
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
+function nav(){const list=$('module-list');list.replaceChildren();const all=[{id:'*',title:'Complete profile',category:'Workspace'},...schema.modules];let cat='';for(const m of all){if(filter&&!`${m.title} ${m.category}`.toLowerCase().includes(filter))continue;if(m.category!==cat){cat=m.category;list.append(el('div','nav-group',cat));}const b=el('button','module'+(m.id===selected?' selected':''),m.title);b.type='button';b.onclick=()=>{selected=m.id;render();};list.append(b);}if(!list.children.length)list.append(el('p','muted','No matching sections.'));}
+function render(){nav();$('scope').textContent=selected==='*'?'Complete profile':modules.get(selected).title;const ff=chosen();$('field-count').textContent=ff.length+' fields · native schema 1';$('scope-note').textContent=selected==='hud'?'Everything the HUD editor can place: on/off, normalized position, scale and colour index. Codes with scope=hud imported from the site load straight into this section.':selected==='menu'?'One keybinding shared with the site: Windows virtual-key code, 161 = Right Shift.':selected==='esp_shared'?'These appearance settings are shared by the three native ESP renderers.':selected.endsWith('_esp')?'Category distance is separate. Appearance is in ESP / shared appearance.':selected==='*'?'Export every section, or select one module on the left. Importing one module leaves unrelated fields unchanged.':'Only this section is included in its generated code.';const area=$('fields');area.replaceChildren();let last='';for(const f of ff){if(selected==='*'&&last!==f.module){last=f.module;area.append(el('h3','section-heading',modules.get(last).title));}const row=el('div','field'),label=el('label','field-label',f.title);label.htmlFor='f-'+f.id;const sub=el('span','field-id',f.id);label.append(sub);row.append(label);if(['bool','state'].includes(f.kind)){const b=el('button','switch'+(values[f.id]?' on':''));b.type='button';b.id='f-'+f.id;b.setAttribute('role','switch');b.setAttribute('aria-checked',String(!!values[f.id]));b.setAttribute('aria-label',f.title);b.append(el('span','switch-knob'));const word=el('span','switch-word',values[f.id]?'ON':'OFF');b.append(word);b.onclick=()=>{values[f.id]=values[f.id]?0:1;b.classList.toggle('on',!!values[f.id]);b.setAttribute('aria-checked',String(!!values[f.id]));word.textContent=values[f.id]?'ON':'OFF';dirty();};row.append(b);}else if(Array.isArray(f.opts)){const group=el('div','number-group');const sel=document.createElement('select');sel.className='number select';sel.id='f-'+f.id;f.opts.forEach((o,i)=>{const op=document.createElement('option');op.value=String(i);op.textContent=o;sel.append(op);});sel.value=String(values[f.id]);sel.setAttribute('aria-label',f.title);sel.onchange=()=>{values[f.id]=Number(sel.value);delete edits[f.id];invalid.delete(f.id);dirty();};group.append(sel,el('span','range','0–'+(f.opts.length-1)));row.append(group);}else{const group=el('div','number-group');const input=el('input','number');input.type='number';input.id='f-'+f.id;input.min=f.min;input.max=f.max;input.step=f.kind==='number'?'any':'1';input.value=edits[f.id]??values[f.id];input.setAttribute('aria-invalid',String(invalid.has(f.id)));input.oninput=()=>{$('code').value='';edits[f.id]=input.value;const x=input.value===''?NaN:Number(input.value);input.setAttribute('aria-invalid',String(!valid(f,x)));if(valid(f,x)){invalid.delete(f.id);values[f.id]=x;dirty();}else{invalid.add(f.id);status('Invalid value for '+f.title+'; allowed '+f.min+'–'+f.max,true);}};group.append(input,el('span','range',f.min+'–'+f.max));row.append(group);}area.append(row);}updateSummary();}
+function dirty(){$('code').value='';status('Changed locally. Generate a new code to share these values.');updateSummary();}
+function updateSummary(){const fs=chosen();$('summary').textContent=fs.filter(f=>f.kind==='state'&&values[f.id]).length+' requested ON · '+fs.length+' included fields';}
+function generate(){try{const bad=chosen().some(f=>invalid.has(f.id));if(bad)throw Error('Fix the highlighted input before generating.');const code=encode(snapshot());$('code').value=code;status('Code generated. Share it as text; no account or server is involved.');return code;}catch(e){status(e.message,true);return null;}}
+async function copy(){const code=$('code').value||generate();if(!code)return;try{await navigator.clipboard.writeText(code);status('Code copied.');}catch{$('code').focus();$('code').select();let ok=false;try{ok=document.execCommand('copy');}catch{}status(ok?'Code copied.':'Code selected. Press Ctrl+C (or long-press Copy).');}}
+function previewCode(){try{preview=decode($('import-code').value);$('preview-name').textContent=preview.name+' / '+(preview.scope==='*'?'Complete profile':modules.get(preview.scope).title);$('apply').disabled=false;previewTable();status('Valid code. Review the diff before applying it to this editor.');}catch(e){preview=null;$('apply').disabled=true;$('preview-name').textContent='Nothing imported';$('diff').replaceChildren();status(e.message,true);}}
+function allow(f){return (f.kind!=='state'||$('include-states').checked)&&(f.kind!=='key'||$('include-keys').checked);}
+function previewTable(){if(!preview)return;const table=$('diff');table.replaceChildren();let count=0;for(const [id,v] of Object.entries(preview.values)){const f=fields.get(id);const include=allow(f),changed=values[id]!==v;if(include&&changed)count++;const row=el('div','diff-row'+(!include?' skipped':''));row.append(el('span','',id),el('span','',String(values[id])+' → '+v),el('span','',include?(changed?'CHANGE':'SAME'):'SKIP'));table.append(row);}$('preview-count').textContent=count+' changes selected. Unrelated fields stay untouched.';}
+function apply(){if(!preview)return;undo={};for(const [id,v] of Object.entries(preview.values))if(allow(fields.get(id))){undo[id]=values[id];values[id]=v;invalid.delete(id);delete edits[id];}$('undo').disabled=false;selected=preview.scope;$('name').value=preview.name;render();previewTable();$('code').value='';status('Applied to this editor only. Generate a code, then paste it into native Configs.');}
+function undoApply(){if(!undo)return;Object.assign(values,undo);for(const id of Object.keys(undo)){invalid.delete(id);delete edits[id];}undo=null;$('undo').disabled=true;render();previewTable();dirty();status('Previous imported values restored in this editor.');}
+function download(){const code=$('code').value||generate();if(!code)return;const a=el('a');a.href=URL.createObjectURL(new Blob([code],{type:'text/plain;charset=utf-8'}));a.download=($('name').value||'config').replace(/[^A-Za-z0-9_-]/g,'_')+'-'+(selected==='*'?'all':selected)+'.cx2';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+function init(){$('search').oninput=e=>{filter=e.target.value.toLowerCase();nav();};$('name').oninput=dirty;$('generate').onclick=generate;$('copy').onclick=copy;$('download').onclick=download;$('preview').onclick=previewCode;$('apply').onclick=apply;$('undo').onclick=undoApply;$('include-states').onchange=previewTable;$('include-keys').onchange=previewTable;$('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>32768){status('File exceeds 32 KiB.',true);return;}$('import-code').value=await f.text();previewCode();};$('reset').onclick=()=>{if(!confirm('Reset only the selected section to the documented defaults?'))return;for(const f of chosen()){values[f.id]=f.default;invalid.delete(f.id);delete edits[f.id];}render();dirty();};render();}
+
+
+  /* ---------- studio shell ---------- */
+  const VKEY='coxe-native-values';
+  let restored=0;
+  try{
+    const saved=JSON.parse(localStorage.getItem(VKEY)||'null');
+    if(saved&&typeof saved==='object'){
+      for(const [id,v] of Object.entries(saved)){
+        const f=fields.get(id);
+        if(!f||!valid(f,v))continue;
+        values[id]=v;restored++;
+      }
+    }
+  }catch(e){}
+  if(restored){render();status(restored+' saved values restored from this browser. Generate a code when you are ready.');}
+
+  let saveT=null;
+  function saveSoon(){
+    clearTimeout(saveT);
+    saveT=setTimeout(()=>{try{localStorage.setItem(VKEY,JSON.stringify(values));}catch(e){}},250);
+  }
+  document.addEventListener('input',saveSoon,true);
+  document.addEventListener('change',saveSoon,true);
+  document.addEventListener('click',e=>{if(e.target.closest('#generate,#reset,#apply,#undo,#copy'))saveSoon();},true);
+
+  function share(code){
+    try{
+      const u=new URL(location.href);
+      u.hash='studio';
+      u.searchParams.set('c',code);
+      history.replaceState(null,'',u);
+    }catch(e){}
+  }
+  const shareNow = () => setTimeout(() => { if ($('code').value) share($('code').value); }, 0);
+  $('generate').addEventListener('click', shareNow);
+  $('copy').addEventListener('click', shareNow);
+
+  const shared=new URLSearchParams(location.search).get('c');
+  if(shared){
+    $('import-code').value=shared;
+    previewCode();
+    status('Code loaded from the link — review the diff, then apply it to the editor.');
+  }
+
+  document.addEventListener('keydown',e=>{
+    if(!document.body.classList.contains('view-studio'))return;
+    const cmd=e.ctrlKey||e.metaKey;
+    if(cmd&&e.key.toLowerCase()==='g'){e.preventDefault();$('generate').click();}
+    if(cmd&&e.key==='Enter'){e.preventDefault();if($('import-code').value.trim())$('preview').click();else $('apply').click();}
+    if(e.key==='/'&&document.activeElement!==$('search')&&!/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){e.preventDefault();$('search').focus();}
+  });
+
+  const sc=$('secCount'); if(sc) sc.textContent = schema.modules.length;
+  init();
+
+  /* exposed to the site shell so switching views can re-render */
+  window.CoxeStudio = { render, values, schema };
+
+})();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a51a65f78c3c5aaa',t:'MTc5MzE5NTMwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
