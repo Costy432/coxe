@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Coxe Client — Minecraft 1.21.11 Fabric · 1.8.9 Forge · CraftRise</title>
+<meta name="description" content="Coxe is a lightweight Minecraft client. Mod for 1.21.11 (Fabric) and 1.8.9 (Forge), External for 1.20 → 1.21.11 with CraftRise support. Opens with Right Shift." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230f1319'/%3E%3Cpath d='M12 4C8.7 4 6.2 6.5 6.2 9.8V18l2-1.5 1.8 1.5 2-1.5 2 1.5 1.8-1.5 2 1.5V9.8C17.8 6.5 15.3 4 12 4Z' fill='%23fff'/%3E%3Crect x='9.2' y='9.6' width='1.9' height='2.6' rx='.5' fill='%230f1319'/%3E%3Crect x='12.9' y='9.6' width='1.9' height='2.6' rx='.5' fill='%230f1319'/%3E%3C/svg%3E" />
+<style>
+/* ============ tokens ============ */
+:root{
+  --bg:#ffffff;
+  --paper:#f6f7f9;
+  --paper2:#eef1f5;
+  --line:#e4e7ec;
+  --line2:#d2d8e1;
+  --ink:#0f1319;
+  --ink2:#28303b;
+  --mut:#5c6675;
+  --dim:#8d97a5;
+  --accent:#2f6bff;
+  --accent-d:#1f52d0;
+  --accent-soft:#eef3ff;
+  --accent-line:#cfdcfb;
+  --ok:#12a150;
+  --ok-soft:#e8f7ee;
+  --ok-line:#c4e9d3;
+  --warn:#a86800;
+  --warn-soft:#fff6e6;
+  --warn-line:#f2dfbb;
+  --r:12px;
+  --r-lg:18px;
+  --sh1:0 1px 2px rgba(15,19,25,.05);
+  --sh2:0 1px 2px rgba(15,19,25,.05), 0 10px 30px rgba(15,19,25,.07);
+  --sh3:0 2px 8px rgba(15,19,25,.06), 0 26px 60px rgba(15,19,25,.11);
+  --max:1180px;
+  --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Inter,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Consolas,"Liberation Mono",monospace;
+}
+[data-theme="dark"]{
+  --bg:#0c0f14;
+  --paper:#11151c;
+  --paper2:#171c25;
+  --line:#232a35;
+  --line2:#333c4a;
+  --ink:#eef2f8;
+  --ink2:#cbd3de;
+  --mut:#9aa5b4;
+  --dim:#6f7a89;
+  --accent:#5b8cff;
+  --accent-d:#7aa2ff;
+  --accent-soft:#141d31;
+  --accent-line:#26375a;
+  --ok:#3ecf8e;
+  --ok-soft:#10231b;
+  --ok-line:#1d4635;
+  --warn:#e0b263;
+  --warn-soft:#231c10;
+  --warn-line:#3d3117;
+  --sh1:0 1px 2px rgba(0,0,0,.4);
+  --sh2:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  --sh3:0 2px 8px rgba(0,0,0,.45), 0 26px 60px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .25s,color .25s}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+svg{display:block}
+::selection{background:#2f6bff2b}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 26px}
+.mono{font-family:var(--mono)}
+h1,h2,h3,h4{letter-spacing:-.02em;line-height:1.12}
+.kbd{font:700 11px/1 var(--mono);padding:5px 8px;border-radius:6px;background:var(--paper2);
+  border:1px solid var(--line2);border-bottom-width:2px;color:var(--ink2);display:inline-block}
+
+/* ============ topbar ============ */
+.topbar{position:sticky;top:0;z-index:70;background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+@supports not (background:color-mix(in srgb,#fff 50%,transparent)){.topbar{background:var(--bg)}}
+.tb-in{max-width:var(--max);margin:0 auto;padding:0 26px;height:64px;display:flex;align-items:center;gap:18px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:-.02em;flex:none}
+.logo .mark{width:33px;height:33px;border-radius:9px;background:var(--ink);display:grid;place-items:center;flex:none;transition:.2s}
+.logo .mark svg{width:19px;height:19px}
+.logo .mark svg path{fill:var(--bg)}
+.logo .mark svg rect{fill:var(--ink)}
+.logo small{display:block;font:600 8px/1 var(--mono);letter-spacing:.2em;color:var(--dim);margin-top:3px}
+.nav{display:flex;gap:1px;margin-left:auto}
+.nav a{padding:8px 11px;border-radius:8px;font-size:13px;font-weight:600;color:var(--mut);transition:.14s;white-space:nowrap}
+.nav a:hover{color:var(--ink);background:var(--paper)}
+.nav a.active{color:var(--ink);background:var(--paper2)}
+.iconbtn{width:36px;height:36px;border-radius:9px;border:1px solid var(--line2);background:var(--bg);
+  display:grid;place-items:center;flex:none;transition:.15s;color:var(--ink2)}
+.iconbtn:hover{background:var(--paper);border-color:var(--mut)}
+.iconbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:9px;
+  font-weight:700;font-size:13.5px;padding:10px 16px;transition:.15s;border:1px solid transparent;white-space:nowrap}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2}
+.btn-dark{background:var(--ink);color:var(--bg);box-shadow:var(--sh1)}
+.btn-dark:hover{transform:translateY(-1px);box-shadow:var(--sh2)}
+.btn-accent{background:var(--accent);color:#fff;box-shadow:var(--sh1)}
+.btn-accent:hover{background:var(--accent-d);transform:translateY(-1px);box-shadow:var(--sh2)}
+.btn-ghost{background:var(--bg);border-color:var(--line2);color:var(--ink2)}
+.btn-ghost:hover{border-color:var(--mut);background:var(--paper)}
+.btn-sm{padding:7px 12px;font-size:12.5px;border-radius:8px}
+.btn-block{width:100%}
+.burger{display:none}
+
+/* ============ hero ============ */
+.hero{border-bottom:1px solid var(--line);background:
+  radial-gradient(900px 400px at 82% -12%, var(--accent-soft) 0%, transparent 68%),
+  radial-gradient(680px 340px at 4% 0%, var(--paper) 0%, transparent 70%), var(--bg);
+  padding:52px 0 42px}
+.hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:48px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:var(--bg);
+  border:1px solid var(--line2);font:700 10.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink2);box-shadow:var(--sh1)}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px #12a15022}
+h1{margin-top:18px;font-size:clamp(36px,4.7vw,58px);font-weight:800;letter-spacing:-.035em}
+h1 .light{color:var(--dim)}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{margin-top:16px;font-size:15.5px;line-height:1.68;color:var(--mut);max-width:50ch}
+.lede b{color:var(--ink)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+.statstrip{display:grid;grid-template-columns:repeat(4,1fr);margin-top:26px;border:1px solid var(--line);
+  border-radius:var(--r);background:var(--bg);overflow:hidden;box-shadow:var(--sh1)}
+.stat{padding:12px 16px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-size:16px;letter-spacing:-.02em;white-space:nowrap}
+.stat span{display:block;font:600 9.5px/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+
+/* product card */
+.pcard{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh3);overflow:hidden}
+.pc-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--paper)}
+.pc-head .badge{font:700 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:5px 7px;
+  border-radius:5px;background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok-line)}
+.pc-head h3{font-size:14.5px}
+.pc-head .ver{margin-left:auto;font:700 11px/1 var(--mono);color:var(--dim)}
+.pc-tabs{display:flex;gap:6px;padding:12px 18px 0}
+.pc-tabs button{flex:1;padding:9px 6px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);
+  font:700 12px/1.25 var(--mono);color:var(--mut);transition:.15s}
+.pc-tabs button small{display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:3px;font-weight:700}
+.pc-tabs button:hover{border-color:var(--mut);color:var(--ink)}
+.pc-tabs button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.pc-tabs button.on small{color:var(--dim)}
+.pc-spec{list-style:none;padding:12px 18px 2px}
+.pc-spec li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:12.5px}
+.pc-spec li:last-child{border-bottom:0}
+.pc-spec li .k{color:var(--mut);font-weight:600;min-width:86px}
+.pc-spec li .v{margin-left:auto;font-weight:700;text-align:right}
+.pc-spec li .v code{font-family:var(--mono);font-size:11.5px;background:var(--paper2);border:1px solid var(--line);
+  border-radius:5px;padding:2px 6px}
+.pc-foot{padding:4px 18px 18px}
+.pc-note{margin-top:9px;font-size:11px;color:var(--dim);text-align:center;line-height:1.5}
+.pc-note code{font-family:var(--mono);color:var(--accent);background:var(--accent-soft);border-radius:4px;padding:1px 5px}
+
+/* ============ layout helpers ============ */
+section{padding:56px 0;scroll-margin-top:64px}
+.band{background:var(--paper);border-block:1px solid var(--line)}
+.sec-head{max-width:660px;margin-bottom:26px}
+.eyebrow{font:700 10px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+h2{font-size:clamp(23px,2.8vw,31px);font-weight:800}
+.sec-head p{margin-top:10px;color:var(--mut);font-size:14.5px;line-height:1.65}
+.row-between{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:26px}
+.row-between .sec-head{margin-bottom:0}
+
+/* ============ modules ============ */
+.modbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.search{position:relative;flex:1;min-width:220px}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;
+  stroke:var(--dim);fill:none;stroke-width:2}
+.search input{width:100%;padding:11px 12px 11px 35px;border-radius:9px;border:1px solid var(--line2);
+  background:var(--bg);color:var(--ink);font:600 13px var(--font);outline:none;transition:.15s}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2f6bff1f}
+.search kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);font:700 9.5px var(--mono);
+  color:var(--dim);border:1px solid var(--line2);border-radius:4px;padding:3px 5px;background:var(--paper)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:8px 12px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);
+  font:700 11.5px var(--mono);color:var(--mut);transition:.14s;white-space:nowrap}
+.chip:hover{border-color:var(--mut);color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip .n{opacity:.6;margin-left:5px}
+
+.modgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-height:520px;overflow:auto;
+  padding-right:4px}
+.modcard{border:1px solid var(--line);border-radius:11px;background:var(--bg);padding:12px 13px;
+  display:flex;gap:11px;align-items:flex-start;transition:.14s;cursor:pointer}
+.modcard:hover{border-color:var(--line2);box-shadow:var(--sh1)}
+.modcard.on{border-color:var(--accent-line);background:var(--accent-soft)}
+.modcard .mc-t{flex:1;min-width:0}
+.modcard .mc-n{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.modcard .mc-c{font:600 9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--line);border-radius:4px;padding:2px 4px;flex:none}
+.modcard .mc-d{font-size:11px;color:var(--mut);line-height:1.45;margin-top:3px}
+.sw{width:34px;height:18px;border-radius:10px;background:var(--line2);position:relative;flex:none;transition:.16s}
+.sw:after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:.16s}
+.modcard.on .sw{background:var(--accent)}
+.modcard.on .sw:after{left:18px}
+.empty{padding:26px;text-align:center;color:var(--dim);font-size:13px;grid-column:1/-1}
+
+/* config code */
+.cfgbox{margin-top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg);
+  padding:16px 18px;box-shadow:var(--sh1)}
+.cfgbox .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.cfgbox .lbl{font:700 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.cfgin{flex:1;min-width:180px;padding:10px 12px;border-radius:8px;border:1px solid var(--line2);background:var(--paper);
+  font:700 12px var(--mono);color:var(--ink);outline:none;letter-spacing:.04em}
+.cfgin:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2f6bff1f}
+.cfgnote{margin-top:10px;font-size:11.5px;color:var(--dim);line-height:1.55}
+
+/* overlay preview */
+.previewgrid{display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start;margin-top:20px}
+.ovcard{border:1px solid var(--line);border-radius:var(--r);background:var(--bg);padding:12px;box-shadow:var(--sh1)}
+.ov{position:relative;height:250px;border-radius:9px;overflow:hidden;border:1px solid var(--line2);
+  background:linear-gradient(180deg,#c9e0f4,#a3c5e6)}
+.ov .gnd{position:absolute;left:0;right:0;bottom:0;height:80px;background:#7ba05b}
+.ov .gnd:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,#00000010 0 22px,transparent 22px 44px)}
+.ov .ent{position:absolute;left:56%;top:40%;width:22px;height:44px;border-radius:3px;background:#5c7391;transition:.2s}
+.ov .ent:before{content:"";position:absolute;left:2px;top:-14px;width:18px;height:14px;border-radius:2px;background:#c99b78}
+.ov .espbox{position:absolute;left:53%;top:30%;width:38px;height:72px;border:1.5px solid var(--accent);
+  border-radius:3px;opacity:0;transition:.2s}
+.ov .tracer{position:absolute;left:53%;bottom:80px;width:1.5px;height:100px;background:var(--accent);
+  transform-origin:bottom;transform:rotate(16deg);opacity:0;transition:.2s}
+.ov .ntag{position:absolute;left:53%;top:20%;transform:translateX(-50%);font:700 9.5px var(--mono);color:#fff;
+  background:#0f1319c9;padding:3px 6px;border-radius:4px;white-space:nowrap;opacity:0;transition:.2s}
+.ov .alist{position:absolute;right:8px;top:8px;text-align:right;font:700 9.5px/1.6 var(--mono);color:#fff;
+  text-shadow:0 1px 3px #0006;opacity:0;transition:.2s}
+.ov .cross{position:absolute;left:50%;top:50%;width:12px;height:12px;transform:translate(-50%,-50%)}
+.ov .cross:before,.ov .cross:after{content:"";position:absolute;background:#fff;box-shadow:0 0 2px #0006}
+.ov .cross:before{left:5px;top:0;width:2px;height:12px}
+.ov .cross:after{top:5px;left:0;height:2px;width:12px}
+.ov-note{margin-top:9px;font-size:11px;color:var(--dim);text-align:center}
+.mini{display:grid;gap:8px}
+.mini .mrow{display:flex;align-items:center;gap:8px;font:700 11px var(--mono);color:var(--dim);
+  border:1px solid var(--line);border-radius:8px;padding:9px 11px;background:var(--bg)}
+.mini .mrow b{margin-left:auto;color:var(--ink);font-size:12px}
+
+/* ============ HUD editor ============ */
+.hudstage{position:relative;height:330px;border-radius:var(--r);border:1px solid var(--line2);
+  background:linear-gradient(180deg,#cde3f6,#a9cae9);overflow:hidden;box-shadow:var(--sh2);touch-action:none;
+  user-select:none}
+.hudstage .gnd{position:absolute;left:0;right:0;bottom:0;height:110px;background:#7ba05b}
+.hudstage .gnd:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,#00000010 0 26px,transparent 26px 52px)}
+.hudel{position:absolute;font:700 11px/1.5 var(--mono);color:#fff;text-shadow:0 1px 3px #0007;
+  background:#0f131980;border:1px dashed #ffffff66;border-radius:5px;padding:5px 8px;cursor:grab;
+  white-space:nowrap;backdrop-filter:blur(2px)}
+.hudel:active{cursor:grabbing;border-color:#fff;background:#0f1319b3}
+.hudel.sel{border-style:solid;border-color:var(--accent);box-shadow:0 0 0 2px #2f6bff44}
+.hudtools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.hudtools .hint{font-size:11.5px;color:var(--dim);margin-left:auto}
+.hudstage .hintline{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);font:700 10px var(--mono);
+  color:#ffffffcc;text-shadow:0 1px 3px #0007;pointer-events:none}
+
+/* ============ builds ============ */
+.builds{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.bcard{border:1px solid var(--line);border-radius:var(--r);background:var(--bg);padding:18px;
+  display:flex;flex-direction:column;box-shadow:var(--sh1);transition:.18s}
+.bcard:hover{transform:translateY(-2px);box-shadow:var(--sh2);border-color:var(--line2)}
+.bcard .top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.ico{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--paper2);border:1px solid var(--line)}
+.ico svg{width:18px;height:18px;stroke:var(--ink2);fill:none;stroke-width:2}
+.bcard h4{font-size:14.5px;font-weight:800}
+.bcard .sub{font:600 10px/1.4 var(--mono);color:var(--dim);margin-top:3px;letter-spacing:.05em}
+.bcard ul{list-style:none;border-top:1px solid var(--line);margin-bottom:14px}
+.bcard li{display:flex;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:12px}
+.bcard li span:first-child{color:var(--dim);font-weight:600}
+.bcard li span:last-child{margin-left:auto;font-weight:700;text-align:right}
+.bcard li .ok{color:var(--ok)}
+.bcard .btn{margin-top:auto}
+
+/* download options */
+.dlopt{margin-top:18px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg);padding:20px;box-shadow:var(--sh1)}
+.dlopt .h{display:flex;align-items:center;gap:11px}
+.dlopt .h h3{font-size:15px}
+.dlopt .h p{font-size:12px;color:var(--dim);margin-top:2px}
+.toggles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.tg{display:flex;gap:12px;align-items:flex-start;padding:13px;border-radius:10px;border:1px solid var(--line2);
+  background:var(--bg);cursor:pointer;transition:.15s}
+.tg:hover{border-color:var(--mut);background:var(--paper)}
+.tg.on{border-color:var(--accent-line);background:var(--accent-soft)}
+.tg .txt{flex:1}
+.tg .txt b{display:block;font-size:12.5px;margin-bottom:2px}
+.tg .txt em{font-style:normal;font-size:11px;color:var(--mut);line-height:1.5;display:block}
+.tg .sw{width:36px;height:19px;border-radius:11px;margin-left:auto;flex:none}
+.mbrow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:11px;padding:12px 14px;
+  border-radius:10px;border:1px solid var(--line);background:var(--paper)}
+.mbrow[hidden]{display:none}
+.mbrow .lbl{font:700 9.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.mbrow input{width:80px;padding:8px 10px;border-radius:7px;border:1px solid var(--line2);background:var(--bg);
+  font:700 12.5px var(--mono);color:var(--ink);outline:none}
+.mbrow input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2f6bff1f}
+.mbrow .to{color:var(--dim);font-weight:700;font-size:12px}
+.nextbox{margin-left:auto;display:flex;align-items:center;gap:7px;font:700 11px var(--mono);color:var(--accent);
+  background:var(--bg);border:1px solid var(--accent-line);border-radius:8px;padding:7px 11px}
+.nextbox b{color:var(--ink)}
+.optnote{margin-top:10px;font-size:11px;line-height:1.6;color:var(--warn);background:var(--warn-soft);
+  border:1px solid var(--warn-line);border-radius:8px;padding:9px 12px}
+
+/* ============ table ============ */
+.tablewrap{border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--bg);box-shadow:var(--sh1)}
+table.cmp{width:100%;border-collapse:collapse;font-size:13px}
+.cmp th,.cmp td{padding:12px 16px;text-align:center;border-bottom:1px solid var(--line)}
+.cmp thead th{background:var(--paper);font:700 10px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.cmp thead th:first-child,.cmp tbody td:first-child{text-align:left}
+.cmp tbody td:first-child{color:var(--mut);font-weight:600}
+.cmp tbody td{font-weight:700;color:var(--ink2)}
+.cmp tbody tr:last-child td{border-bottom:0}
+.cmp tbody tr:hover{background:var(--paper)}
+.cmp .yes{color:var(--ok)}
+.cmp .no{color:var(--dim);opacity:.6}
+.cmp .hl{color:var(--accent)}
+
+/* ============ keybind ============ */
+.kbgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.kbcard{border:1px solid var(--line);border-radius:var(--r);background:var(--bg);padding:18px;box-shadow:var(--sh1)}
+.kbcard h4{font-size:14px;margin-bottom:6px}
+.kbcard p{font-size:12px;color:var(--mut);line-height:1.6;margin-bottom:12px}
+.keybig{display:flex;align-items:center;justify-content:center;gap:10px;padding:20px;border-radius:10px;
+  border:1px dashed var(--line2);background:var(--paper);font:800 15px var(--mono);color:var(--ink);
+  cursor:pointer;transition:.15s;min-height:64px}
+.keybig:hover{border-color:var(--accent);color:var(--accent)}
+.keybig.listening{border-style:solid;border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+
+/* ============ setup ============ */
+.ostabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.ostabs button{padding:9px 14px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);
+  font:700 12px var(--mono);color:var(--mut);transition:.14s}
+.ostabs button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:s}
+.step{border:1px solid var(--line);border-radius:var(--r);background:var(--bg);padding:18px;box-shadow:var(--sh1)}
+.step:before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:26px;height:26px;
+  border-radius:7px;background:var(--ink);color:var(--bg);font:800 12px var(--mono);margin-bottom:12px}
+.step h4{font-size:13.5px;margin-bottom:6px}
+.step p{font-size:12px;line-height:1.65;color:var(--mut)}
+.step code{font-family:var(--mono);font-size:11px;background:var(--accent-soft);color:var(--accent-d);
+  border-radius:4px;padding:1px 5px;word-break:break-all}
+
+/* ============ changelog ============ */
+.log{position:relative;padding-left:26px}
+.log:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:var(--line2)}
+.logitem{position:relative;padding-bottom:22px}
+.logitem:last-child{padding-bottom:0}
+.logitem:before{content:"";position:absolute;left:-23px;top:5px;width:9px;height:9px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--line2)}
+.logitem.new:before{border-color:var(--accent);box-shadow:0 0 0 3px #2f6bff22}
+.logitem .lh{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.logitem .lv{font:800 13px var(--mono)}
+.logitem .tag{font:700 9px var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:3px 6px;
+  border-radius:4px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
+.logitem .ld{font:600 10.5px var(--mono);color:var(--dim)}
+.logitem ul{list-style:none;margin-top:7px}
+.logitem li{position:relative;padding-left:14px;font-size:12.5px;color:var(--mut);line-height:1.7}
+.logitem li:before{content:"";position:absolute;left:3px;top:9px;width:4px;height:4px;border-radius:50%;background:var(--line2)}
+
+/* ============ faq ============ */
+.faqs{display:grid;gap:8px;max-width:840px}
+.faq{border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
+.faq.open{border-color:var(--accent-line);box-shadow:var(--sh1)}
+.faq > button{width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px;text-align:left;
+  font-size:13.5px;font-weight:700}
+.faq > button .plus{margin-left:auto;width:20px;height:20px;border-radius:5px;background:var(--paper);
+  border:1px solid var(--line);display:grid;place-items:center;font:700 13px/1 var(--mono);color:var(--mut);
+  transition:.16s;flex:none}
+.faq.open > button .plus{background:var(--accent);border-color:var(--accent);color:#fff;transform:rotate(45deg)}
+.faq .body{max-height:0;overflow:hidden;transition:max-height .26s ease}
+.faq.open .body{max-height:420px}
+.faq .body p{padding:0 16px 14px;font-size:12.5px;line-height:1.7;color:var(--mut)}
+.faq .body code{font-family:var(--mono);font-size:11.5px;background:var(--paper2);border:1px solid var(--line);
+  border-radius:4px;padding:1px 5px;color:var(--ink2)}
+
+/* ============ cta + footer ============ */
+.cta{background:var(--ink);border-radius:var(--r-lg);padding:34px 30px;display:flex;align-items:center;
+  gap:24px;flex-wrap:wrap}
+.cta h2{color:var(--bg);font-size:clamp(21px,2.5vw,28px)}
+.cta p{color:var(--dim);font-size:13px;margin-top:7px;max-width:44ch;line-height:1.6}
+.cta .acts{margin-left:auto;display:flex;gap:9px;flex-wrap:wrap}
+.cta .btn-ghost{background:transparent;border-color:#3a4351;color:var(--bg)}
+.cta .btn-ghost:hover{background:#1b222c;border-color:#4d5765}
+footer{background:var(--paper);border-top:1px solid var(--line);padding:36px 0 24px}
+.foot{display:flex;gap:28px;flex-wrap:wrap}
+.foot .about{max-width:320px}
+.foot .about p{margin-top:10px;font-size:12px;line-height:1.65;color:var(--mut)}
+.fcols{display:flex;gap:44px;margin-left:auto;flex-wrap:wrap}
+.fcol h5{font:700 9.5px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:9px}
+.fcol a{display:block;font-size:12px;color:var(--mut);padding:3.5px 0;transition:.13s}
+.fcol a:hover{color:var(--ink)}
+.legal{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);display:flex;gap:12px;flex-wrap:wrap;
+  font-size:11px;color:var(--dim);line-height:1.6}
+.legal span:last-child{margin-left:auto}
+
+/* toast + misc */
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,150%);z-index:90;max-width:min(92vw,430px);
+  background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:10px;font-size:12.5px;font-weight:600;
+  box-shadow:var(--sh3);display:flex;align-items:center;gap:8px;transition:transform .28s cubic-bezier(.2,.9,.2,1)}
+.toast.show{transform:translate(-50%,0)}
+.toast .tick{width:15px;height:15px;border-radius:50%;background:var(--ok);display:grid;place-items:center;flex:none}
+.toast .tick svg{width:9px;height:9px;stroke:#fff;fill:none;stroke-width:3}
+.toast span{min-width:0;overflow-wrap:anywhere}
+.totop{position:fixed;right:18px;bottom:18px;z-index:80;width:40px;height:40px;border-radius:10px;
+  background:var(--bg);border:1px solid var(--line2);box-shadow:var(--sh2);display:grid;place-items:center;
+  opacity:0;pointer-events:none;transform:translateY(8px);transition:.2s}
+.totop.show{opacity:1;pointer-events:auto;transform:none}
+.totop svg{width:16px;height:16px;stroke:var(--ink2);fill:none;stroke-width:2.2}
+.rv{opacity:0;transform:translateY(10px);transition:opacity .45s,transform .45s}
+.rv.in{opacity:1;transform:none}
+
+/* ============ responsive ============ */
+@media (max-width:1000px){
+  .hero-grid,.previewgrid,.kbgrid{grid-template-columns:1fr}
+  .modgrid{grid-template-columns:repeat(2,1fr)}
+  .builds,.steps,.toggles{grid-template-columns:1fr}
+  .nav{display:none}
+  .burger{display:grid}
+  .tb-in{gap:10px}
+  section{padding:42px 0}
+  .cmp th,.cmp td{padding:10px 9px;font-size:11.5px}
+}
+@media (max-width:620px){
+  .wrap,.tb-in{padding:0 15px}
+  .statstrip{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--line)}
+  .modgrid{grid-template-columns:1fr;max-height:none}
+  .cta{padding:26px 20px}
+  .cta .acts{margin-left:0;width:100%}
+  .foot .about{max-width:none}
+  .fcols{gap:30px;margin-left:0}
+  .search kbd{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+}
+
+/* ============ module settings + config panel (v2) ============ */
+.modcard .mc-n{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.gear{margin-left:auto;width:19px;height:19px;border-radius:5px;display:grid;place-items:center;flex:none;
+  border:1px solid var(--line);background:var(--bg);color:var(--dim);font-size:10px;line-height:1;transition:.14s}
+.gear:hover{color:var(--accent);border-color:var(--accent-line);background:var(--accent-soft)}
+.mc-set{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.modcard.open .mc-set{display:block}
+.mc-s{display:flex;align-items:center;gap:8px;margin:6px 0;font:600 10.5px var(--mono);color:var(--mut)}
+.mc-s .l{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-s input[type=range]{-webkit-appearance:none;appearance:none;width:66px;height:3px;border-radius:2px;
+  background:var(--line2);outline:none;flex:none}
+.mc-s input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;
+  background:var(--accent);cursor:pointer;box-shadow:0 0 0 2px var(--bg)}
+.mc-s input[type=range]::-moz-range-thumb{width:10px;height:10px;border:0;border-radius:50%;background:var(--accent);cursor:pointer}
+.mc-s .val{color:var(--accent);font-weight:700;min-width:38px;text-align:right;flex:none}
+.mc-s .cyc{font:700 10px var(--mono);padding:3px 7px;border-radius:5px;border:1px solid var(--line2);
+  background:var(--bg);color:var(--ink2);cursor:pointer;flex:none}
+.mc-s .cyc:hover{border-color:var(--accent);color:var(--accent)}
+
+.cfgpanel{margin-top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg);
+  box-shadow:var(--sh1);overflow:hidden}
+.cfgcols{display:grid;grid-template-columns:1.3fr .7fr}
+.cfgblock{padding:16px 18px;border-right:1px solid var(--line)}
+.cfgblock:last-child{border-right:0}
+.cfgh{display:flex;align-items:center;gap:8px;font:700 10px var(--mono);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.badge2{font:700 8.5px var(--mono);padding:2px 5px;border-radius:4px;background:var(--accent-soft);
+  color:var(--accent);border:1px solid var(--accent-line);letter-spacing:.06em;text-transform:none}
+.cfgrow{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.cfgrow + .cfgrow{margin-top:8px}
+.cfgnote{margin-top:9px;font-size:11px;color:var(--dim);line-height:1.55}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.preset{padding:8px 11px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);
+  font:700 11px var(--mono);color:var(--ink2);transition:.14s}
+.preset:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.savedlist{margin-top:8px;display:grid;gap:6px;max-height:130px;overflow:auto}
+.savedrow{display:flex;align-items:center;gap:8px;font-size:12px;border:1px solid var(--line);
+  border-radius:7px;padding:7px 9px;background:var(--paper)}
+.savedrow .nm{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.savedrow .acts{margin-left:auto;display:flex;gap:4px;flex:none}
+.mini-btn{font:700 9.5px var(--mono);padding:4px 7px;border-radius:5px;border:1px solid var(--line2);
+  background:var(--bg);color:var(--mut);transition:.13s}
+.mini-btn:hover{color:var(--ink);border-color:var(--mut)}
+.mini-btn.del:hover{color:#e5484d;border-color:#e5484d}
+.importbox{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.importbox[hidden]{display:none}
+.importbox textarea{width:100%;min-height:66px;padding:10px;border-radius:8px;border:1px solid var(--line2);
+  background:var(--paper);font:600 11px var(--mono);color:var(--ink);resize:vertical;outline:none;line-height:1.5}
+.importbox textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2f6bff1f}
+
+/* ============ HUD editor v2 ============ */
+.hudwrap{display:grid;grid-template-columns:1fr 306px;gap:14px;align-items:start}
+.hudstage2{position:relative;height:350px;border-radius:var(--r);border:1px solid var(--line2);overflow:hidden;
+  box-shadow:var(--sh2);user-select:none;transition:background .3s}
+.hudstage2.day{background:linear-gradient(180deg,#cde3f6,#a9cae9)}
+.hudstage2.night{background:linear-gradient(180deg,#141b2b,#080d15)}
+.hudstage2.nether{background:linear-gradient(180deg,#3f1518,#1a0708)}
+.hudstage2 .gnd{position:absolute;left:0;right:0;bottom:0;height:112px;background:#7ba05b;transition:background .3s}
+.hudstage2.night .gnd{background:#263d26}
+.hudstage2.nether .gnd{background:#5a1d1d}
+.hudstage2 .gnd:after{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,#00000012 0 26px,transparent 26px 52px)}
+.hudel2{position:absolute;font:700 11px/1.5 var(--mono);color:#fff;text-shadow:0 1px 3px #0008;
+  background:#0f131980;border:1px dashed #ffffff59;border-radius:5px;padding:5px 7px;cursor:grab;
+  white-space:nowrap;user-select:none;touch-action:none;transition:border-color .12s,box-shadow .12s}
+.hudel2:hover{border-color:#ffffffb3}
+.hudel2.sel{border-style:solid;border-color:var(--accent);box-shadow:0 0 0 2px #2f6bff66;z-index:6;cursor:grabbing}
+.hudel2 b{font-weight:800}
+.guide{position:absolute;background:#2f6bffcc;pointer-events:none;opacity:0;transition:opacity .1s;z-index:8}
+.guide.v{left:50%;top:0;bottom:0;width:1px}
+.guide.h{top:50%;left:0;right:0;height:1px}
+.guide.on{opacity:1}
+.hudtools2{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px;align-items:center}
+.hudtools2 .hint{font-size:11px;color:var(--dim);margin-left:auto}
+.hudside{border:1px solid var(--line);border-radius:var(--r);background:var(--bg);padding:14px;box-shadow:var(--sh1)}
+.hudside .h{font:700 9.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.ellist{display:grid;gap:4px;max-height:184px;overflow:auto;margin-bottom:14px}
+.elrow{display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:6px;border:1px solid var(--line);
+  font-size:11.5px;font-weight:700;cursor:pointer;background:var(--bg);transition:.13s}
+.elrow:hover{background:var(--paper)}
+.elrow.on{border-color:var(--accent-line);background:var(--accent-soft)}
+.elrow .d{width:6px;height:6px;border-radius:50%;background:var(--line2);flex:none}
+.elrow.on .d{background:var(--accent)}
+.elrow .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.elrow .st{font:700 8px var(--mono);color:var(--dim);flex:none}
+.rowline{display:flex;align-items:center;gap:8px;margin:7px 0;font:600 10px var(--mono);color:var(--mut)}
+.rowline .l{flex:1;white-space:nowrap}
+.rowline input[type=range]{-webkit-appearance:none;appearance:none;width:104px;height:3px;border-radius:2px;
+  background:var(--line2);outline:none;flex:none}
+.rowline input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;
+  background:var(--accent);cursor:pointer;box-shadow:0 0 0 2px var(--bg)}
+.rowline input[type=range]::-moz-range-thumb{width:10px;height:10px;border:0;border-radius:50%;background:var(--accent)}
+.rowline .val{color:var(--accent);font-weight:700;min-width:36px;text-align:right;flex:none}
+.swatch2{width:19px;height:19px;border-radius:5px;border:2px solid var(--line2);cursor:pointer;
+  display:inline-block;transition:.13s}
+.swatch2:hover{transform:scale(1.1)}
+.swatch2.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--bg) inset}
+
+@media (max-width:1000px){
+  .cfgcols{grid-template-columns:1fr}
+  .cfgblock{border-right:0;border-bottom:1px solid var(--line)}
+  .cfgblock:last-child{border-bottom:0}
+  .hudwrap{grid-template-columns:1fr}
+  .hudstage2{order:0}
+}
+
+  /* HUD polish */
+  #elList{max-height:242px;overflow-y:auto;scrollbar-width:thin;padding-right:2px}
+  #elList::-webkit-scrollbar{width:6px}
+  #elList::-webkit-scrollbar-thumb{background:var(--line2,#d6dae0);border-radius:6px}
+  #elList .elrow{transition:background .14s}
+  #hudCode{white-space:pre-wrap;word-break:break-all;height:54px;resize:vertical;line-height:1.4;font-size:11px}
+  @media (max-width:1000px){#elList{max-height:216px}.hudstage2{min-height:300px}}
+</style>
+</head>
+<body>
+
+<!-- ================= TOPBAR ================= -->
+<header class="topbar">
+  <div class="tb-in">
+    <a class="logo" href="#top">
+      <span class="mark">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3C8.9 3 6.5 5.4 6.5 8.6V19l1.9-1.4 1.8 1.4 1.9-1.4 1.9 1.4 1.8-1.4 1.9 1.4V8.6C17.5 5.4 15.1 3 12 3Z"/>
+          <rect x="9.3" y="8.7" width="1.8" height="2.5" rx=".5"/>
+          <rect x="12.9" y="8.7" width="1.8" height="2.5" rx=".5"/>
+        </svg>
+      </span>
+      <span>COXE<small>MINECRAFT CLIENT</small></span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#modules">Modules</a>
+      <a href="#hud">HUD Editor</a>
+      <a href="config.html">Config Studio</a>
+      <a href="#builds">Builds</a>
+      <a href="#compare">Compatibility</a>
+      <a href="#controls">Controls</a>
+      <a href="#setup">Setup</a>
+      <a href="#changelog">Changelog</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button class="burger iconbtn" id="burger" aria-label="Menu">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <button class="iconbtn" id="themeBtn" aria-label="Toggle theme" title="Toggle light / dark">
+      <svg id="themeIcon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>
+    </button>
+    <a href="#builds" class="btn btn-dark btn-sm">Download</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <span class="pill"><i class="dot"></i> v3.6 · 1.21.11 · 1.8.9 · CRAFTRISE</span>
+          <h1>Clean client.<br /><span class="light">Zero</span> <em>noise</em>.</h1>
+          <p class="lede">
+            One ClickGUI, no FPS tax, and a setup you can carry around as a single config code.
+            Take the <b>Mod for 1.21.11 (Fabric)</b> or <b>1.8.9 (Forge)</b>, or the <b>External</b>
+            for anything from 1.20 to 1.21.11 — <b>CraftRise</b> included.
+          </p>
+          <div class="hero-cta">
+            <a href="#builds" class="btn btn-accent">
+              <svg viewBox="0 0 24 24"><path d="M12 3v11m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+              Download
+            </a>
+            <a href="#modules" class="btn btn-ghost">Browse modules</a>
+          </div>
+          <div class="statstrip">
+            <div class="stat"><b id="statModules">—</b><span>Modules</span></div>
+            <div class="stat"><b id="statCats">—</b><span>Categories</span></div>
+            <div class="stat"><b>3</b><span>Builds</span></div>
+            <div class="stat"><b>Right Shift</b><span>Opens GUI</span></div>
+          </div>
+        </div>
+
+        <aside class="pcard">
+          <div class="pc-head">
+            <span class="badge">Latest</span>
+            <h3>Coxe Mod</h3>
+            <span class="ver" id="cardVer">1.21.11</span>
+          </div>
+          <div class="pc-tabs" role="tablist" aria-label="Minecraft version">
+            <button type="button" class="on" role="tab" data-ver="1.21.11" aria-selected="true">1.21.11<small>Fabric</small></button>
+            <button type="button" role="tab" data-ver="1.8.9" aria-selected="false">1.8.9<small>Forge</small></button>
+          </div>
+          <ul class="pc-spec">
+            <li><span class="k">Minecraft</span><span class="v" id="specGame">1.21.11</span></li>
+            <li><span class="k">Loader</span><span class="v" id="specLoader">Fabric + Fabric API</span></li>
+            <li><span class="k">Java</span><span class="v" id="specJava">21+</span></li>
+            <li><span class="k">File</span><span class="v"><code id="specFile">coxe-mod.jar</code></span></li>
+            <li><span class="k">GUI key</span><span class="v" id="specKey">Right Shift</span></li>
+            <li><span class="k">Platforms</span><span class="v">Windows · macOS · Linux</span></li>
+          </ul>
+          <div class="pc-foot">
+            <a href="coxe-mod.jar" id="modDl" download class="btn btn-accent btn-block magnet" data-dl="Coxe Mod 1.21.11">
+              <svg viewBox="0 0 24 24"><path d="M12 3v11m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+              <span id="modDlText">Download coxe-mod.jar</span>
+            </a>
+            <div class="pc-note" id="modNote">Drop it in <code>.minecraft/mods</code> and launch Fabric 1.21.11</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODULES + CONFIG ================= -->
+  <section id="modules">
+    <div class="wrap">
+      <div class="row-between">
+        <div class="sec-head rv">
+          <div class="eyebrow">Modules</div>
+          <h2>Every module, searchable</h2>
+          <p>Filter, search, and open a module's <b>settings</b> (⚙) to change its values. Everything you set —
+             toggles, slider values and the HUD layout — is packed into one code you can copy or share as a link.
+             Need per-field control? Open the <a href="config.html">Config Studio</a>, same schema, same code.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="resetMods">Reset everything</button>
+      </div>
+
+      <div class="modbar">
+        <div class="search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="modSearch" type="search" placeholder="Search modules — e.g. aura, esp, speed" autocomplete="off" />
+          <kbd style="font-size:11px;padding:2px 6px">press /</kbd>
+        </div>
+        <div class="chips" id="chips"></div>
+      </div>
+
+      <div class="modgrid" id="modGrid"></div>
+
+      <!-- config panel -->
+      <div class="cfgpanel">
+        <div class="cfgcols">
+          <div class="cfgblock">
+            <div class="cfgh">Config code <span class="badge2">schema 1 · modules + HUD</span></div>
+            <div class="cfgrow">
+              <input class="cfgin" id="cfgCode" readonly value="" aria-label="Config code" />
+              <button class="btn btn-dark btn-sm" id="copyCfg">Copy</button>
+            </div>
+            <div class="cfgrow">
+              <button class="btn btn-ghost btn-sm" id="copyLink">Copy share link</button>
+              <button class="btn btn-ghost btn-sm" id="openImport">Import code…</button>
+            </div>
+            <div class="cfgrow">
+              <a class="btn btn-ghost btn-sm" href="config.html" style="text-decoration:none">Open Config Studio →</a>
+            </div>
+
+            <div class="importbox" id="importBox" hidden>
+              <textarea id="importInput" placeholder="Paste a CX2.… code, an old CX2- code, or a share link…" spellcheck="false"></textarea>
+              <div class="cfgrow">
+                <button class="btn btn-accent btn-sm" id="applyImport">Apply</button>
+                <button class="btn btn-ghost btn-sm" id="cancelImport">Cancel</button>
+                <span class="cfgnote" id="importDiff"></span>
+              </div>
+            </div>
+
+            <div class="cfgnote" id="cfgInfo">Turn modules on or move a slider — the code updates itself.</div>
+          </div>
+
+          <div class="cfgblock">
+            <div class="cfgh">Presets</div>
+            <div class="presets" id="presets"></div>
+            <div class="cfgh" style="margin-top:16px">Saved configs</div>
+            <div class="cfgrow">
+              <input class="cfgin" id="cfgName" placeholder="Name this config…" maxlength="24"
+                     style="letter-spacing:0;font-family:var(--font);font-weight:600;text-transform:none" />
+              <button class="btn btn-dark btn-sm" id="saveCfg">Save</button>
+            </div>
+            <div class="savedlist" id="savedList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="previewgrid">
+        <div class="ovcard">
+          <div class="ov" id="ov">
+            <div class="gnd"></div>
+            <div class="ent" id="ovEnt"></div>
+            <div class="espbox" id="ovBox"></div>
+            <div class="tracer" id="ovTracer"></div>
+            <div class="ntag" id="ovTag">Player · 12m</div>
+            <div class="alist" id="ovList"></div>
+            <div class="cross"></div>
+          </div>
+          <div class="ov-note">Live mock overlay — it follows your toggles <i>and</i> slider values.</div>
+        </div>
+        <div class="mini">
+          <div class="mrow"><span id="mCountLabel">Enabled modules</span> <b id="mCount">0</b></div>
+          <div class="mrow">Custom values <b id="mVals">0</b></div>
+          <div class="mrow">Categories active <b id="mCats">0</b></div>
+          <div class="mrow">Config code length <b id="mLen">0</b></div>
+          <div class="mrow">Stored in <b>browser only</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HUD EDITOR ================= -->
+  <div class="band">
+    <section id="hud">
+      <div class="wrap">
+        <div class="sec-head rv">
+          <div class="eyebrow">HUD Editor</div>
+          <h2>Build your own overlay</h2>
+          <p>Turn elements on from the list, drag them anywhere, then fine-tune position, scale and colour.
+             The whole layout can be copied as one code — or saved for later.</p>
+        </div>
+
+        <div class="hudwrap rv">
+          <div>
+            <div class="hudstage2 day" id="hudStage">
+              <div class="gnd"></div>
+              <div class="guide v" id="guideV"></div>
+              <div class="guide h" id="guideH"></div>
+            </div>
+            <div class="hudtools2">
+              <button class="btn btn-ghost btn-sm" id="hudBgDay">Day</button>
+              <button class="btn btn-ghost btn-sm" id="hudBgNight">Night</button>
+              <button class="btn btn-ghost btn-sm" id="hudBgNether">Nether</button>
+              <span style="width:1px;height:22px;background:var(--line);margin:0 2px"></span>
+              <button class="btn btn-ghost btn-sm" id="hudSnap" aria-pressed="false">Grid snap: off</button>
+              <button class="btn btn-ghost btn-sm" id="hudUndo">Undo</button>
+              <button class="btn btn-ghost btn-sm" id="hudReset">Reset layout</button>
+              <span class="hint" id="hudInfo">Click an element to select it.</span>
+            </div>
+          </div>
+
+          <aside class="hudside">
+            <div class="h">Elements</div>
+            <div class="ellist" id="elList"></div>
+
+            <div class="h">Selected <span id="selName" style="color:var(--accent)">—</span></div>
+            <div id="selPanel">
+              <div class="rowline"><span class="l">X position</span><input type="range" id="selX" min="0" max="100" step="0.5" value="0"><span class="val" id="selXv">0%</span></div>
+              <div class="rowline"><span class="l">Y position</span><input type="range" id="selY" min="0" max="100" step="0.5" value="0"><span class="val" id="selYv">0%</span></div>
+              <div class="rowline"><span class="l">Scale</span><input type="range" id="selScale" min="70" max="150" step="5" value="100"><span class="val" id="selScalev">100%</span></div>
+              <div class="rowline"><span class="l">Colour</span>
+                <span style="display:flex;gap:4px">
+                  <span class="swatch2 on" data-col="#ffffff" style="background:#ffffff"></span>
+                  <span class="swatch2" data-col="#5b8cff" style="background:#5b8cff"></span>
+                  <span class="swatch2" data-col="#3ecf8e" style="background:#3ecf8e"></span>
+                  <span class="swatch2" data-col="#ffd166" style="background:#ffd166"></span>
+                  <span class="swatch2" data-col="#ff7b7b" style="background:#ff7b7b"></span>
+                </span>
+              </div>
+              <div class="cfgrow" style="margin-top:10px">
+                <button class="btn btn-ghost btn-sm" id="selHide">Hide</button>
+                <button class="btn btn-ghost btn-sm" id="selCenter">Centre</button>
+              </div>
+            </div>
+
+            <div class="h" style="margin-top:16px">Layout code</div>
+            <input class="cfgin" id="hudCode" readonly style="font-size:10.5px" aria-label="HUD layout code" />
+            <div class="cfgrow" style="margin-top:7px">
+              <button class="btn btn-dark btn-sm" id="hudCopy">Copy</button>
+              <button class="btn btn-ghost btn-sm" id="hudImportBtn">Import…</button>
+            </div>
+            <div class="importbox" id="hudImportBox" hidden>
+              <textarea id="hudImportInput" placeholder="Paste a layout code…" spellcheck="false" style="min-height:52px"></textarea>
+              <div class="cfgrow">
+                <button class="btn btn-accent btn-sm" id="hudApplyImport">Apply</button>
+                <button class="btn btn-ghost btn-sm" id="hudCancelImport">Cancel</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= BUILDS ================= -->
+  <section id="builds">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Downloads</div>
+        <h2>Choose your build</h2>
+        <p>All three files sit next to this page. Mod builds run inside Minecraft as a jar, the External
+           runs next to the game as a single exe.</p>
+      </div>
+
+      <div class="builds">
+        <article class="bcard rv">
+          <div class="top">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v10m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
+            <div><h4>Coxe Mod</h4><div class="sub">MINECRAFT 1.21.11 · FABRIC</div></div>
+          </div>
+          <ul>
+            <li><span>File</span><span class="mono" style="font-size:11px">coxe-mod.jar</span></li>
+            <li><span>Loader</span><span>Fabric API</span></li>
+            <li><span>Java</span><span>21+</span></li>
+            <li><span>GUI key</span><span>Right Shift</span></li>
+          </ul>
+          <a href="coxe-mod.jar" download class="btn btn-dark btn-block magnet" data-dl="Coxe Mod 1.21.11">Download</a>
+        </article>
+
+        <article class="bcard rv">
+          <div class="top">
+            <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v10m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
+            <div><h4>Coxe Mod</h4><div class="sub">MINECRAFT 1.8.9 · FORGE</div></div>
+          </div>
+          <ul>
+            <li><span>File</span><span class="mono" style="font-size:11px">coxe-mod-1.8.9.jar</span></li>
+            <li><span>Loader</span><span>Forge 11.15.1.2318</span></li>
+            <li><span>Java</span><span>8+</span></li>
+            <li><span>GUI key</span><span>Right Shift</span></li>
+          </ul>
+          <a href="coxe-mod-1.8.9.jar" download class="btn btn-dark btn-block magnet" data-dl="Coxe Mod 1.8.9 Forge">Download</a>
+        </article>
+
+        <article class="bcard rv">
+          <div class="top">
+            <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+            <div><h4>Coxe External</h4><div class="sub">1.20 → 1.21.11 · WINDOWS</div></div>
+          </div>
+          <ul>
+            <li><span>File</span><span class="mono" style="font-size:11px">coxe-external.exe</span></li>
+            <li><span>Loader</span><span>None</span></li>
+            <li><span>CraftRise</span><span class="ok">Supported</span></li>
+            <li><span>GUI key</span><span>Right Shift</span></li>
+          </ul>
+          <a href="coxe-external.exe" download class="btn btn-dark btn-block magnet" data-dl="Coxe External 1.20–1.21.11">Download</a>
+        </article>
+      </div>
+
+      <div class="dlopt rv">
+        <div class="h">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h9"/><circle cx="18" cy="17" r="2.2"/></svg></div>
+          <div><h3>Download options</h3><p>Applied to every download button on this page.</p></div>
+        </div>
+
+        <div class="toggles">
+          <div class="tg on" data-opt="randName" role="switch" aria-checked="true" tabindex="0">
+            <div class="txt"><b>Randomized file name</b><em>Each download gets a unique name, e.g. coxe-mod-1.8.9-7f3a91.jar</em></div>
+            <span class="sw"></span>
+          </div>
+          <div class="tg" data-opt="randSize" role="switch" aria-checked="false" tabindex="0">
+            <div class="txt"><b>Randomized size (MB)</b><em>Pads the downloaded file to a random size inside your range</em></div>
+            <span class="sw"></span>
+          </div>
+        </div>
+
+        <div class="mbrow" id="mbRow" hidden>
+          <span class="lbl">Size range</span>
+          <input id="mbMin" type="number" min="1" max="500" step="0.5" value="4" aria-label="Minimum MB" />
+          <span class="to">MB →</span>
+          <input id="mbMax" type="number" min="1" max="500" step="0.5" value="9" aria-label="Maximum MB" />
+          <span class="to">MB</span>
+          <div class="nextbox">Next: <b id="nextName">—</b></div>
+        </div>
+
+        <div class="optnote">
+          <b>Heads up:</b> padding is added to the end of the file. <b>.exe</b> handles that natively.
+          Some launchers are strict about extra bytes in a <b>.jar</b> — if Forge or Fabric refuses to load it,
+          turn Randomized size off and download again.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMPATIBILITY ================= -->
+  <div class="band">
+    <section id="compare">
+      <div class="wrap">
+        <div class="sec-head rv">
+          <div class="eyebrow">Compatibility</div>
+          <h2>What runs where</h2>
+          <p>Same modules, same GUI key. The only real difference is which Minecraft you load.</p>
+        </div>
+        <div class="tablewrap rv" style="overflow-x:auto">
+          <table class="cmp">
+            <thead><tr><th>Feature</th><th>Mod · 1.21.11</th><th>Mod · 1.8.9</th><th>External</th></tr></thead>
+            <tbody>
+              <tr><td>Loader</td><td class="hl">Fabric</td><td class="hl">Forge</td><td>None</td></tr>
+              <tr><td>Minecraft</td><td>1.21.11</td><td>1.8.9</td><td>1.20 – 1.21.11</td></tr>
+              <tr><td>Java</td><td>21+</td><td>8+</td><td>Bundled</td></tr>
+              <tr><td>CraftRise</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+              <tr><td>Lunar / Feather / Badlion</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+              <tr><td>Config codes</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+              <tr><td>HUD editor</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+              <tr><td>Platforms</td><td>Win · mac · Linux</td><td>Win · mac · Linux</td><td>Windows</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= CONTROLS ================= -->
+  <section id="controls">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Controls</div>
+        <h2>One key does the work</h2>
+        <p>Right Shift opens the ClickGUI on every build. You can rebind it — click the box and press any key
+           to see how the capture behaves.</p>
+      </div>
+
+      <div class="kbgrid">
+        <div class="kbcard rv">
+          <h4>GUI key</h4>
+          <p>Defaults to Right Shift. Click, then press the key you want.</p>
+          <div class="keybig" id="keyCapture" tabindex="0" role="button" aria-label="Capture GUI key">
+            <span id="keyLabel">Right Shift</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:10px" id="keyReset">Reset to Right Shift</button>
+        </div>
+        <div class="kbcard rv">
+          <h4>Everything else</h4>
+          <p>Standard Minecraft movement. Nothing is bound on top of your game keys.</p>
+          <div class="mini">
+            <div class="mrow">Move <b>W A S D</b></div>
+            <div class="mrow">Jump <b>Space</b></div>
+            <div class="mrow">Sprint <b>Left Shift</b></div>
+            <div class="mrow">Open ClickGUI <b id="keyEcho">Right Shift</b></div>
+            <div class="mrow">Bind a module <b>Middle click</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SETUP ================= -->
+  <div class="band">
+    <section id="setup">
+      <div class="wrap">
+        <div class="sec-head rv">
+          <div class="eyebrow">Setup</div>
+          <h2>Three steps</h2>
+        </div>
+
+        <div class="ostabs" id="osTabs">
+          <button type="button" class="on" data-os="win">Windows</button>
+          <button type="button" data-os="mac">macOS</button>
+          <button type="button" data-os="linux">Linux</button>
+        </div>
+
+        <div class="steps" id="osSteps"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= CHANGELOG ================= -->
+  <section id="changelog">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow">Changelog</div>
+        <h2>What changed</h2>
+      </div>
+      <div class="log rv">
+        <div class="logitem new">
+          <div class="lh"><span class="lv">v3.6</span><span class="tag">Latest</span><span class="ld">Current build</span></div>
+          <ul>
+            <li>1.8.9 build moved to <b>Forge</b> (11.15.1.2318) alongside the 1.21.11 Fabric build</li>
+            <li>External tuned for <b>CraftRise</b></li>
+            <li>Config codes and a full HUD editor on every build</li>
+            <li>Module search, category filters and per-module toggles</li>
+          </ul>
+        </div>
+        <div class="logitem">
+          <div class="lh"><span class="lv">v3.5</span><span class="ld">Previous</span></div>
+          <ul>
+            <li>ClickGUI rebuilt around Right Shift for every build</li>
+            <li>Nametags, tracers and ESP sharing one render path</li>
+            <li>Movement modules rewritten around vanilla collision</li>
+          </ul>
+        </div>
+        <div class="logitem">
+          <div class="lh"><span class="lv">v3.0</span><span class="ld">Earlier</span></div>
+          <ul>
+            <li>First public build: ESP, tracers, speed, fly</li>
+            <li>Single jar install, no launcher patch</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <div class="band">
+    <section id="faq">
+      <div class="wrap">
+        <div class="sec-head rv">
+          <div class="eyebrow">FAQ</div>
+          <h2>Common questions</h2>
+        </div>
+        <div class="faqs">
+          <div class="faq rv">
+            <button type="button">Which build should I download? <span class="plus">+</span></button>
+            <div class="body"><p>On <b>Forge 1.8.9</b> or <b>Fabric 1.21.11</b> take the matching Mod jar — that is the
+              tightest integration. If you switch versions a lot, use Lunar / Feather / Badlion, or play on
+              <b>CraftRise</b>, take the External: one exe covers 1.20 → 1.21.11 with no loader.</p></div>
+          </div>
+          <div class="faq rv">
+            <button type="button">What do I need for the Mod? <span class="plus">+</span></button>
+            <div class="body"><p><b>1.8.9:</b> Forge for 1.8.9 (11.15.1.2318 recommended) and Java 8+ —
+              <code>coxe-mod-1.8.9.jar</code>. <b>1.21.11:</b> Fabric Loader, Fabric API and Java 21+ —
+              <code>coxe-mod.jar</code>.</p></div>
+          </div>
+          <div class="faq rv">
+            <button type="button">Does it work with CraftRise? <span class="plus">+</span></button>
+            <div class="body"><p>Yes — the External is tuned for <b>CraftRise</b>. Run <code>coxe-external.exe</code>,
+              leave it open, join CraftRise, then press your GUI key. Nothing in your launcher or game folder changes.</p></div>
+          </div>
+          <div class="faq rv">
+            <button type="button">How do config codes work? <span class="plus">+</span></button>
+            <div class="body"><p>Modules, their slider values, the menu key and the whole HUD layout are packed into
+              one code that looks like <code>CX2.…</code> with a CRC32 tail. The same code is read by this page,
+              the <a href="config.html">Config Studio</a> and native <b>Configs → Paste</b>. An 8-digit checksum
+              catches accidental edits, and nothing leaves your browser.</p></div>
+          </div>
+          <div class="faq rv">
+            <button type="button">Mac or Linux? <span class="plus">+</span></button>
+            <div class="body"><p>The External is Windows 10/11 only. On macOS and Linux use the Mod —
+              Forge 1.8.9 or Fabric 1.21.11, both have the full module set.</p></div>
+          </div>
+          <div class="faq rv">
+            <button type="button">What does the Randomized size option do? <span class="plus">+</span></button>
+            <div class="body"><p>It appends padding so the downloaded file lands inside the MB range you set.
+              It never shrinks a file, and it is off by default because some launchers dislike extra bytes
+              on a jar.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= CTA ================= -->
+  <div class="wrap" style="padding-block:52px">
+    <div class="cta rv">
+      <div>
+        <h2>Ready when you are.</h2>
+        <p>Three files, one key. Grab the build that matches your Minecraft and open the ClickGUI.</p>
+      </div>
+      <div class="acts">
+        <a href="#builds" class="btn btn-accent">Download builds</a>
+        <a href="coxe-external.exe" download class="btn btn-ghost magnet" data-dl="Coxe External">External for CraftRise</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="about">
+        <a class="logo" href="#top">
+          <span class="mark">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3C8.9 3 6.5 5.4 6.5 8.6V19l1.9-1.4 1.8 1.4 1.9-1.4 1.9 1.4 1.8-1.4 1.9 1.4V8.6C17.5 5.4 15.1 3 12 3Z"/>
+              <rect x="9.3" y="8.7" width="1.8" height="2.5" rx=".5"/>
+              <rect x="12.9" y="8.7" width="1.8" height="2.5" rx=".5"/>
+            </svg>
+          </span>
+          <span>COXE<small>MINECRAFT CLIENT</small></span>
+        </a>
+        <p>Mod for 1.21.11 (Fabric) and 1.8.9 (Forge), External for 1.20 → 1.21.11 with CraftRise support.
+           Config codes, HUD editor and module search on every build.</p>
+      </div>
+      <div class="fcols">
+        <div class="fcol">
+          <h5>Download</h5>
+          <a href="coxe-mod.jar" download class="magnet" data-dl="Coxe Mod 1.21.11">coxe-mod.jar</a>
+          <a href="coxe-mod-1.8.9.jar" download class="magnet" data-dl="Coxe Mod 1.8.9 Forge">coxe-mod-1.8.9.jar</a>
+          <a href="coxe-external.exe" download class="magnet" data-dl="Coxe External">coxe-external.exe</a>
+        </div>
+        <div class="fcol">
+          <h5>Tools</h5>
+          <a href="#modules">Module browser</a>
+          <a href="#hud">HUD editor</a>
+          <a href="#controls">Keybind capture</a>
+          <a href="#compare">Compatibility</a>
+        </div>
+        <div class="fcol">
+          <h5>Info</h5>
+          <a href="#setup">Setup guide</a>
+          <a href="#changelog">Changelog</a>
+          <a href="#faq">FAQ</a>
+          <a href="#top">Back to top</a>
+        </div>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 Coxe. Not affiliated with Mojang, Microsoft or CraftRise.</span>
+      <span>Minecraft is a trademark of Mojang Synergies AB.</span>
+    </div>
+  </div>
+</footer>
+
+<button class="totop" id="toTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></svg>
+</button>
+
+<div class="toast" id="toast">
+  <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+  <span id="toastTxt">Done</span>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const $  = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const LS = {
+    get(k, fb){ try { const v = localStorage.getItem(k); return v === null ? fb : JSON.parse(v); } catch(e){ return fb; } },
+    set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+  const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
+
+  /* ============================================================
+     1. THEME
+     ============================================================ */
+  const SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/>';
+  const MOON = '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5Z"/>';
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme', t);
+    $('#themeIcon').innerHTML = t === 'dark' ? MOON : SUN;
+    LS.set('coxe-theme', t);
+  }
+  applyTheme(LS.get('coxe-theme', 'light'));
+  $('#themeBtn').addEventListener('click', () => {
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ============================================================
+     2. MODULES + CONFIG SYSTEM v2 (carries slider values)
+     ============================================================ */
+  const MODULES = [
+    { id:'esp', n:'ESP', c:'Render', d:'Highlight players through walls', on:true,
+      set:[{k:'range',n:'Range',v:48,min:8,max:96,step:2,u:'m'},{k:'mode',n:'Mode',t:'mode',v:'Box',opts:['Box','Outline','Glow']}] },
+    { id:'tracers', n:'Tracers', c:'Render', d:'Line from you to each player', on:false,
+      set:[{k:'range',n:'Range',v:48,min:8,max:96,step:2,u:'m'},{k:'width',n:'Width',v:1,min:1,max:4,step:1,u:'px'}] },
+    { id:'nametags', n:'Nametags', c:'Render', d:'Custom name renderer with health', on:true,
+      set:[{k:'scale',n:'Scale',v:100,min:60,max:160,step:5,u:'%'},{k:'health',n:'Health bar',t:'mode',v:'On',opts:['On','Off']}] },
+    { id:'chams', n:'Chams', c:'Render', d:'Colour entities client-side', on:false,
+      set:[{k:'alpha',n:'Opacity',v:70,min:10,max:100,step:5,u:'%'}] },
+    { id:'fullbright', n:'FullBright', c:'Render', d:'Maximise in-game gamma', on:false,
+      set:[{k:'gamma',n:'Gamma',v:10,min:1,max:20,step:1,u:'x'}] },
+    { id:'storageesp', n:'StorageESP', c:'Render', d:'Outline chests and barrels', on:false,
+      set:[{k:'tracers',n:'Tracers',t:'mode',v:'Off',opts:['Off','On']}] },
+    { id:'holeesp', n:'HoleESP', c:'Render', d:'Mark safe holes around you', on:false,
+      set:[{k:'range',n:'Range',v:8,min:2,max:24,step:1,u:'m'}] },
+    { id:'itemesp', n:'ItemESP', c:'Render', d:'Highlight dropped items', on:false,
+      set:[{k:'range',n:'Range',v:16,min:4,max:48,step:2,u:'m'}] },
+    { id:'zoom', n:'Zoom', c:'Render', d:'Bindable optical zoom', on:false,
+      set:[{k:'fov',n:'FOV',v:35,min:10,max:70,step:5,u:'°'}] },
+    { id:'cameraclip', n:'CameraClip', c:'Render', d:'No third-person camera clip', on:false, set:[] },
+
+    { id:'speed', n:'Speed', c:'Player', d:'Raise base movement speed', on:false,
+      set:[{k:'mul',n:'Multiplier',v:150,min:100,max:400,step:10,u:'%'}] },
+    { id:'fly', n:'Fly', c:'Player', d:'Free vertical movement', on:false,
+      set:[{k:'speed',n:'Speed',v:10,min:4,max:24,step:1,u:'b/s'}] },
+    { id:'autojump', n:'AutoJump', c:'Player', d:'Jump over blocks while walking', on:false, set:[] },
+    { id:'step', n:'Step', c:'Player', d:'Step up blocks without jumping', on:false,
+      set:[{k:'height',n:'Height',v:1,min:1,max:2,step:1,u:'b'}] },
+    { id:'nofall', n:'NoFall', c:'Player', d:'Ignore landing damage', on:false, set:[] },
+    { id:'safewalk', n:'SafeWalk', c:'Player', d:'Stop at block edges automatically', on:false, set:[] },
+    { id:'noslow', n:'NoSlow', c:'Player', d:'No slowdown while using items', on:false, set:[] },
+    { id:'sprint', n:'Sprint', c:'Player', d:'Always sprint while moving', on:true, set:[] },
+    { id:'antivoid', n:'AntiVoid', c:'Player', d:'Recover when falling into the void', on:false, set:[] },
+    { id:'freecam', n:'Freecam', c:'Player', d:'Detach the camera from your body', on:false, set:[] },
+
+    { id:'killaura', n:'KillAura', c:'Combat', d:'Automatically attack nearby targets', on:false,
+      set:[{k:'range',n:'Range',v:3.6,min:1,max:6,step:.2,u:'b'},{k:'mode',n:'Mode',t:'mode',v:'Single',opts:['Single','Switch','Multi']},
+           {k:'aps',n:'Attacks/s',v:10,min:2,max:20,step:1,u:'/s'}] },
+    { id:'reach', n:'Reach', c:'Combat', d:'Extra attack distance', on:false,
+      set:[{k:'blocks',n:'Blocks',v:5.5,min:3,max:8,step:.5,u:'b'}] },
+    { id:'autoclicker', n:'AutoClicker', c:'Combat', d:'Consistent click timing', on:false,
+      set:[{k:'cps',n:'CPS',v:12,min:1,max:20,step:1,u:'cps'},{k:'jitter',n:'Jitter',v:20,min:0,max:60,step:5,u:'%'}] },
+    { id:'criticals', n:'Criticals', c:'Combat', d:'Force critical hits', on:false, set:[] },
+    { id:'velocity', n:'Velocity', c:'Combat', d:'Reduce incoming knockback', on:false,
+      set:[{k:'hor',n:'Horizontal',v:0,min:0,max:100,step:5,u:'%'},{k:'ver',n:'Vertical',v:0,min:0,max:100,step:5,u:'%'}] },
+    { id:'aimassist', n:'AimAssist', c:'Combat', d:'Gently guide the crosshair', on:false,
+      set:[{k:'speed',n:'Speed',v:30,min:5,max:100,step:5,u:'%'},{k:'range',n:'Range',v:4,min:1,max:8,step:.5,u:'b'}] },
+    { id:'autototem', n:'AutoTotem', c:'Combat', d:'Keep a totem in the offhand', on:false, set:[] },
+    { id:'hitbox', n:'HitBoxes', c:'Combat', d:'Expand entity hitboxes slightly', on:false,
+      set:[{k:'expand',n:'Expand',v:0.1,min:0,max:0.5,step:.05,u:'b'}] },
+    { id:'antikb', n:'AntiKB', c:'Combat', d:'Ignore knockback entirely', on:false, set:[] },
+    { id:'autoblock', n:'AutoBlock', c:'Combat', d:'Block automatically while attacking', on:false, set:[] },
+
+    { id:'scaffold', n:'Scaffold', c:'World', d:'Place blocks under your feet', on:false,
+      set:[{k:'delay',n:'Delay',v:1,min:0,max:5,step:1,u:'t'}] },
+    { id:'fastplace', n:'FastPlace', c:'World', d:'Place blocks with no delay', on:false, set:[] },
+    { id:'nuker', n:'Nuker', c:'World', d:'Break blocks in a radius', on:false,
+      set:[{k:'range',n:'Range',v:4,min:1,max:8,step:1,u:'b'}] },
+    { id:'autotool', n:'AutoTool', c:'World', d:'Switch to the best tool', on:false, set:[] },
+    { id:'cheststealer', n:'ChestStealer', c:'World', d:'Take everything from a chest', on:false,
+      set:[{k:'delay',n:'Delay',v:50,min:0,max:200,step:10,u:'ms'}] },
+    { id:'xray', n:'XRay', c:'World', d:'Show only selected ores', on:false,
+      set:[{k:'opacity',n:'Opacity',v:40,min:10,max:100,step:10,u:'%'}] },
+    { id:'lightdebug', n:'LightDebug', c:'World', d:'Visualise block light levels', on:false, set:[] },
+    { id:'autofarm', n:'AutoFarm', c:'World', d:'Replant and harvest crops', on:false, set:[] },
+
+    { id:'config', n:'Config', c:'Misc', d:'Save and load your setup', on:true, set:[] },
+    { id:'teams', n:'Teams', c:'Misc', d:'Treat teammates differently', on:false, set:[] },
+    { id:'friends', n:'Friends', c:'Misc', d:'Friend list with highlights', on:true, set:[] },
+    { id:'shielddelay', n:'ShieldDelay', c:'Misc', d:'Adjust shield raise timing', on:false,
+      set:[{k:'delay',n:'Delay',v:0,min:0,max:5,step:1,u:'t'}] },
+    { id:'pingspoof', n:'PingSpoof', c:'Misc', d:'Display a different ping value', on:false,
+      set:[{k:'ping',n:'Ping',v:20,min:0,max:300,step:5,u:'ms'}] },
+    { id:'antiafk', n:'AntiAFK', c:'Misc', d:'Stay connected while idle', on:false, set:[] },
+    { id:'nameprotect', n:'NameProtect', c:'Misc', d:'Replace your name on screen', on:false, set:[] },
+    { id:'discordrpc', n:'DiscordRPC', c:'Misc', d:'Show the client in Discord', on:false, set:[] },
+    { id:'autoreconnect', n:'Autoreconnect', c:'Misc', d:'Rejoin after a disconnect', on:false, set:[] },
+
+    { id:'arraylist', n:'Arraylist', c:'HUD', d:'List of enabled modules', on:true, set:[] },
+    { id:'coords', n:'Coords', c:'HUD', d:'XYZ readout on screen', on:false, set:[] },
+    { id:'fps', n:'FPS Counter', c:'HUD', d:'Frame rate overlay', on:false, set:[] },
+    { id:'pinghud', n:'Ping Counter', c:'HUD', d:'Latency overlay', on:false, set:[] },
+    { id:'keystrokes', n:'Keystrokes', c:'HUD', d:'WASD keys on screen', on:false, set:[] },
+    { id:'armor', n:'ArmorStatus', c:'HUD', d:'Durability of worn gear', on:false, set:[] },
+    { id:'potions', n:'PotionStatus', c:'HUD', d:'Active potion timers', on:false, set:[] },
+    { id:'combo', n:'ComboCounter', c:'HUD', d:'Consecutive hit counter', on:false, set:[] },
+    { id:'watermark', n:'Watermark', c:'HUD', d:'Client name and version', on:true, set:[] }
+  ];
+  const CATS = ['All','Render','Player','Combat','World','Misc','HUD'];
+
+  const defaults = m => { const v = {}; (m.set || []).forEach(st => v[st.k] = st.v); return v; };
+  const mod = id => MODULES.find(m => m.id === id);
+  const setDef = (id, k) => (mod(id).set || []).find(x => x.k === k);
+
+  const state = {};
+  MODULES.forEach(m => state[m.id] = { on: !!m.on, v: defaults(m) });
+
+  /* --- restore last session --- */
+  (function restoreModules(){
+    const saved = LS.get('coxe-modules-v2', null);
+    if (!saved || typeof saved !== 'object') return;
+    MODULES.forEach(m => {
+      const sv = saved[m.id];
+      if (!sv) return;
+      state[m.id].on = !!sv.on;
+      Object.keys(sv.v || {}).forEach(k => {
+        const d = setDef(m.id, k);
+        if (!d) return;
+        let val = sv.v[k];
+        if (d.t === 'mode'){ if (d.opts.indexOf(val) < 0) return; }
+        else {
+          val = parseFloat(val);
+          if (isNaN(val)) return;
+          val = clamp(val, d.min, d.max);
+        }
+        state[m.id].v[k] = val;
+      });
+    });
+  })();
+  const persistModules = () => LS.set('coxe-modules-v2', state);
+
+  /* --- encoding helpers --- */
+  const b64url = str => btoa(str).replace(/=+$/,'').replace(/\+/g,'-').replace(/\//g,'_');
+  const unb64url = c => {
+    const b = c.replace(/-/g,'+').replace(/_/g,'/');
+    return atob(b + '==='.slice((b.length + 3) % 4));
+  };
+
+  /* --- one code format for the whole project: CX2.<base64url>.<crc32> --- */
+  const HUD_COLS = ['#ffffff', '#5b8cff', '#3ecf8e', '#ffd166', '#ff7b7b'];
+  const hudBridge = { ready:false, els:null, state:null };
+  let guiVk = 161, guiKey = 'Right Shift';
+
+  const VK_LABEL = {
+    0:'Unbound', 27:'Esc', 32:'Space', 33:'Page Up', 34:'Page Down', 35:'End', 36:'Home', 45:'Insert',
+    160:'Left Shift', 161:'Right Shift', 162:'Left Ctrl', 163:'Right Ctrl', 164:'Left Alt', 165:'Right Alt',
+    9:'Tab', 20:'Caps Lock', 192:'`', 13:'Enter'
+  };
+  function labelFromVk(vk){
+    if (VK_LABEL[vk]) return VK_LABEL[vk];
+    if (vk >= 112 && vk <= 123) return 'F' + (vk - 111);
+    if (vk >= 65 && vk <= 90) return String.fromCharCode(vk);
+    if (vk >= 48 && vk <= 57) return String(vk - 48);
+    return 'VK ' + vk;
+  }
+  function vkFromLabel(label){
+    for (const k in VK_LABEL) if (VK_LABEL[k] === label) return +k;
+    const m = /^F(\d{1,2})$/.exec(label);
+    if (m) return 111 + (+m[1]);
+    if (/^[A-Z]$/.test(label)) return label.charCodeAt(0);
+    if (/^\d$/.test(label)) return 48 + (+label);
+    return 0;
+  }
+
+  function cfgName(){
+    const raw = ($('#cfgName') ? $('#cfgName').value : '').trim();
+    return /^[A-Za-z0-9 _-]{1,32}$/.test(raw) ? raw : 'My preset';
+  }
+  function moduleFields(){
+    const f = {};
+    MODULES.forEach(m => {
+      const st = state[m.id];
+      if (st.on) f[m.id + '.enabled'] = 1;
+      const d = defaults(m);
+      (m.set || []).forEach(sd => {
+        if (String(st.v[sd.k]) === String(d[sd.k])) return;
+        if (sd.t === 'mode') f[m.id + '.' + sd.k] = Math.max(0, sd.opts.indexOf(String(st.v[sd.k])));
+        else f[m.id + '.' + sd.k] = Number(st.v[sd.k]);
+      });
+    });
+    f['menu.key'] = guiVk;
+    return f;
+  }
+  function hudFields(){
+    const f = {};
+    if (!hudBridge.ready) return f;
+    hudBridge.els.forEach(e => {
+      const h = hudBridge.state[e.id];
+      f['hud.' + e.id + '.on'] = h.on ? 1 : 0;
+      f['hud.' + e.id + '.x'] = +(h.x / 100).toFixed(4);
+      f['hud.' + e.id + '.y'] = +(h.y / 100).toFixed(4);
+      f['hud.' + e.id + '.scale'] = +(h.scale / 100).toFixed(2);
+      f['hud.' + e.id + '.color'] = Math.max(0, HUD_COLS.indexOf(h.col));
+    });
+    return f;
+  }
+  function nativeCode(scope, name, fields){
+    let raw = 'coxe-native/1\nscope=' + scope + '\nname=' + (name || 'My preset') + '\n';
+    Object.keys(fields).sort().forEach(k => { raw += k + '=' + Number(fields[k].toPrecision(15)) + '\n'; });
+    return 'CX2.' + b64url(raw) + '.' + crc32(raw);
+  }
+  function makeCode(){
+    const f = moduleFields();
+    Object.assign(f, hudFields());
+    return nativeCode('*', cfgName(), f);
+  }
+
+  /* --- unified decoder (crc32 lives here) --- */
+  function crc32(str){
+    let c = 0xffffffff;
+    for (let i = 0; i < str.length; i++){
+      c ^= str.charCodeAt(i);
+      for (let k = 0; k < 8; k++) c = (c >>> 1) ^ ((c & 1) ? 0xedb88320 : 0);
+    }
+    return ((c ^ 0xffffffff) >>> 0).toString(16).padStart(8, '0');
+  }
+  function decodeUnified(code){
+    const m = code.match(/^CX2\.([A-Za-z0-9_-]+)\.([a-f0-9]{8})$/);
+    if (!m) return null;
+    let raw;
+    try { raw = unb64url(m[1]); } catch(e){ return { __err:'That code is not valid base64url.' }; }
+    if (b64url(raw) !== m[1]) return { __err:'Noncanonical base64url — that code was edited by hand.' };
+    if (crc32(raw) !== m[2]) return { __err:'Checksum mismatch — the code was changed or truncated.' };
+    if (raw.indexOf('coxe-native/1\n') !== 0) return { __err:'Unknown schema version.' };
+    if (raw.length > 24000) return { __err:'That code is oversized.' };
+
+    const lines = raw.split('\n');
+    if (lines[lines.length - 1] === '') lines.pop();
+    if (!lines[1] || lines[1].indexOf('scope=') !== 0 || !lines[2] || lines[2].indexOf('name=') !== 0){
+      return { __err:'Missing scope or name.' };
+    }
+    const out = { __v:4, scope: lines[1].slice(6), name: lines[2].slice(5), fields:{}, __native:'' };
+    let known = 0, unknown = 0;
+
+    for (let i = 3; i < lines.length; i++){
+      const line = lines[i];
+      const eq = line.indexOf('=');
+      if (eq < 0) return { __err:'Malformed field in that code.' };
+      const key = line.slice(0, eq), num = Number(line.slice(eq + 1));
+      if (!isFinite(num)) return { __err:'Invalid number for ' + key + '.' };
+      const dot = key.indexOf('.');
+      if (dot < 0) { unknown++; continue; }
+      const head = key.slice(0, dot), tail = key.slice(dot + 1);
+      const isHud = head === 'hud' && hudBridge.ready && hudBridge.els.some(e => e.id === tail.split('.')[0]);
+      const isMenu = head === 'menu' && tail === 'key';
+      const isMod = !!mod(head);
+      if (!isHud && !isMenu && !isMod){ unknown++; continue; }
+      out.fields[key] = num;
+      known++;
+    }
+    if (!known) return { __err:'That code lists no field this build knows.' };
+    out.__native = known + ' field' + (known === 1 ? '' : 's') + ' mapped' +
+      (unknown ? ' · ' + unknown + ' not in this build' : '');
+    return out;
+  }
+
+  function parseCode(raw){
+    let c = String(raw || '').trim();
+    const link = c.match(/[?&]cfg=([^&\s]+)/);
+    if (link){ try { c = decodeURIComponent(link[1]); } catch(e){ c = link[1]; } }
+    const nativeAny = c.match(/(CX2\.[A-Za-z0-9_-]+\.[a-f0-9]{8})/);
+    if (nativeAny) return decodeUnified(nativeAny[1]);
+    if (!c) return null;
+
+
+    if (c.indexOf('CX2-') === 0){
+      let text;
+      try { text = unb64url(c.slice(4)); } catch(e){ return null; }
+      const out = { __v:2, mods:{} };
+      let seen = 0;
+      text.split('|').filter(Boolean).forEach(part => {
+        const bits = part.split(':');
+        const id = bits[0];
+        if (!mod(id)) return;
+        seen++;
+        out.mods[id] = { on: bits[1] === '1', v:{} };
+        if (bits[2]){
+          bits[2].split(',').forEach(pair => {
+            const kv = pair.split('=');
+            if (kv.length === 2) out.mods[id].v[kv[0]] = kv[1];
+          });
+        }
+      });
+      if (!seen) return { __err:'That code lists no module this build knows.' };
+      return out;
+    }
+
+    /* v1 fallback: plain base64 of comma separated ids */
+    let decoded;
+    try { decoded = unb64url(c); } catch(e){ return null; }
+    if (!/^[a-z0-9_,]+$/.test(decoded) || b64url(decoded) !== c) return { __err:'That code could not be read.' };
+    const ids = decoded.split(',').filter(Boolean);
+    if (!ids.length) return { __err:'That code is empty.' };
+    if (!ids.some(id => MODULES.some(m => m.id === id))) return { __err:'That code lists no module this build knows.' };
+    const out = { __v:1, mods:{} };
+    MODULES.forEach(mm => out.mods[mm.id] = { on: ids.indexOf(mm.id) >= 0, v:{} });
+    return out;
+  }
+
+  /* apply a unified code: scope '*' = complete profile, module id = that module, 'hud' = layout only */
+  function applyUnified(p, announce){
+    const complete = p.scope === '*';
+    let turnedOn = 0, turnedOff = 0, vals = 0, hudTouched = 0;
+
+    if (complete){
+      MODULES.forEach(m => {
+        if (state[m.id].on) turnedOff++;
+        state[m.id].on = false;
+        state[m.id].v = defaults(m);
+      });
+    }
+
+    Object.keys(p.fields).forEach(key => {
+      const v = p.fields[key];
+      const dot = key.indexOf('.');
+      const head = key.slice(0, dot), tail = key.slice(dot + 1);
+
+      if (head === 'hud'){
+        if (!hudBridge.ready) return;
+        const cut = tail.lastIndexOf('.');
+        const elId = tail.slice(0, cut), prop = tail.slice(cut + 1);
+        const el = hudBridge.els.find(e => e.id === elId);
+        if (!el) return;
+        const h = hudBridge.state[elId];
+        if (prop === 'on') h.on = v === 1;
+        else if (prop === 'x') h.x = clamp(v * 100, 0, 100);
+        else if (prop === 'y') h.y = clamp(v * 100, 0, 100);
+        else if (prop === 'scale') h.scale = Math.round(clamp(v * 100, 70, 150));
+        else if (prop === 'color') h.col = HUD_COLS[clamp(Math.round(v), 0, HUD_COLS.length - 1)];
+        else return;
+        hudTouched++;
+        return;
+      }
+
+      if (head === 'menu' && tail === 'key'){
+        guiVk = clamp(Math.round(v), 0, 255);
+        guiKey = labelFromVk(guiVk);
+        LS.set('coxe-guikey-vk', guiVk);
+        LS.set('coxe-guikey', guiKey);
+        if (typeof paintKey === 'function') paintKey();
+        return;
+      }
+
+      const m = mod(head);
+      if (!m) return;
+      if (tail === 'enabled'){
+        const now = v === 1;
+        if (now && !state[head].on) turnedOn++;
+        if (!now && state[head].on) turnedOff++;
+        state[head].on = now;
+        return;
+      }
+      const sd = setDef(head, tail);
+      if (!sd) return;
+      let nv;
+      if (sd.t === 'mode'){
+        nv = sd.opts[clamp(Math.round(v), 0, sd.opts.length - 1)];
+      } else {
+        nv = clamp(v, sd.min, sd.max);
+        const step = sd.step || 0;
+        nv = step > 0 ? Math.round(nv / step) * step : Math.round(nv * 100) / 100;
+        nv = +Number(nv.toPrecision(12));
+        if (step >= 1) nv = Math.round(nv);
+      }
+      if (String(nv) !== String(state[head].v[tail])) vals++;
+      state[head].v[tail] = nv;
+    });
+
+    const nf = $('#cfgName');
+    if (nf && p.name && /^[A-Za-z0-9 _-]{1,32}$/.test(p.name)) nf.value = p.name;
+    renderAll();
+    if (hudTouched && typeof renderAllHud === 'function') renderAllHud();
+    if (announce) toast('Applied · ' + turnedOn + ' on, ' + turnedOff + ' off, ' + vals + ' values');
+    const res = { turnedOn, turnedOff, vals, hud: hudTouched, native: p.__native, scope: p.scope, name: p.name };
+    return res;
+  }
+
+  function applyParsed(parsed, announce){
+    if (!parsed) return false;
+    if (parsed.fields) return applyUnified(parsed, announce);
+    let turnedOn = 0, turnedOff = 0, vals = 0;
+    const only = parsed.__merge ? new Set(Object.keys(parsed.mods)) : null;
+    MODULES.forEach(m => {
+      if (only && !only.has(m.id)) return;
+      const src = parsed.mods[m.id];
+      const was = state[m.id].on;
+      const now = !!(src && src.on);
+      if (now && !was) turnedOn++;
+      if (!now && was) turnedOff++;
+      state[m.id].on = now;
+      const d = defaults(m);
+      m.set && m.set.forEach(sd => {
+        const raw = src && src.v ? src.v[sd.k] : undefined;
+        let val = raw === undefined ? d[sd.k] : raw;
+        if (sd.t === 'mode'){
+          if (sd.opts.indexOf(val) < 0) val = d[sd.k];
+        } else {
+          val = parseFloat(val);
+          if (isNaN(val)) val = d[sd.k];
+          val = clamp(val, sd.min, sd.max);
+        }
+        if (String(val) !== String(state[m.id].v[sd.k])) vals++;
+        state[m.id].v[sd.k] = val;
+      });
+    });
+    renderAll();
+    if (announce) toast('Imported · ' + turnedOn + ' on, ' + turnedOff + ' off, ' + vals + ' values changed');
+    return { turnedOn, turnedOff, vals };
+  }
+
+  /* --- presets --- */
+  const PRESETS = {
+    Legit: ['esp','nametags','arraylist','watermark','sprint','reach','fastplace','autoclicker'],
+    PvP: ['killaura','reach','velocity','autoclicker','criticals','sprint','esp','tracers','nametags','arraylist','combo','watermark'],
+    Visuals: ['esp','tracers','chams','fullbright','storageesp','holeesp','itemesp','nametags','arraylist','coords','fps','watermark'],
+    Minimal: ['esp','arraylist','watermark']
+  };
+  function applyPreset(name){
+    const ids = PRESETS[name] || [];
+    MODULES.forEach(m => state[m.id].on = ids.indexOf(m.id) >= 0);
+    /* preset'i anlamlı kılan birkaç değer */
+    if (name === 'Legit'){ state.reach.v.blocks = 3.5; state.autoclicker.v.cps = 9; }
+    if (name === 'PvP'){ state.killaura.v.range = 3.2; state.velocity.v.hor = 40; }
+    renderAll();
+    toast(name + ' preset applied');
+  }
+
+  /* --- saved configs --- */
+  function savedCfgs(){ return LS.get('coxe-saved-cfgs', []); }
+  function paintSaved(){
+    const list = savedCfgs();
+    $('#savedList').innerHTML = list.length ? list.map((c, i) =>
+      '<div class="savedrow"><span class="nm">' + c.name.replace(/</g,'&lt;') + '</span>' +
+      '<span class="acts"><button class="mini-btn" data-load="' + i + '">Load</button>' +
+      '<button class="mini-btn del" data-del="' + i + '">Del</button></span></div>'
+    ).join('') : '<div class="cfgnote" style="margin-top:0">Nothing saved yet — name a config and hit Save.</div>';
+
+    $$('#savedList [data-load]').forEach(b => b.addEventListener('click', () => {
+      const c = savedCfgs()[+b.dataset.load];
+      if (c && applyParsed(parseCode(c.code), false)) toast('Loaded “' + c.name + '”');
+    }));
+    $$('#savedList [data-del]').forEach(b => b.addEventListener('click', () => {
+      const list2 = savedCfgs();
+      list2.splice(+b.dataset.del, 1);
+      LS.set('coxe-saved-cfgs', list2);
+      paintSaved(); toast('Config deleted');
+    }));
+  }
+
+  /* --- rendering --- */
+  let activeCat = 'All', query = '';
+  const openSets = new Set();
+
+  function renderChips(){
+    $('#chips').innerHTML = CATS.map(c => {
+      const n = c === 'All' ? MODULES.length : MODULES.filter(m => m.c === c).length;
+      return '<button type="button" class="chip ' + (c === activeCat ? 'on' : '') + '" data-cat="' + c + '">' +
+             c + '<span class="n">' + n + '</span></button>';
+    }).join('');
+    $$('#chips .chip').forEach(b => b.addEventListener('click', () => { activeCat = b.dataset.cat; renderChips(); renderGrid(); }));
+  }
+
+  function setRowHTML(id, sd){
+    const val = state[id].v[sd.k];
+    if (sd.t === 'mode'){
+      return '<div class="mc-s"><span class="l">' + sd.n + '</span>' +
+             '<button class="cyc" data-cyc="' + id + ':' + sd.k + '">' + val + '</button></div>';
+    }
+    return '<div class="mc-s"><span class="l">' + sd.n + '</span>' +
+           '<input type="range" min="' + sd.min + '" max="' + sd.max + '" step="' + sd.step + '" value="' + val + '" data-rng="' + id + ':' + sd.k + '">' +
+           '<span class="val" data-val="' + id + ':' + sd.k + '">' + val + (sd.u || '') + '</span></div>';
+  }
+
+  function renderGrid(){
+    const q = query.trim().toLowerCase();
+    const list = MODULES.filter(m => {
+      if (activeCat !== 'All' && m.c !== activeCat) return false;
+      if (!q) return true;
+      return m.n.toLowerCase().includes(q) || m.d.toLowerCase().includes(q) || m.c.toLowerCase().includes(q);
+    });
+    if (!list.length){
+      $('#modGrid').innerHTML = '<div class="empty">No module matches “' + query.replace(/</g,'&lt;') + '”.</div>';
+      return;
+    }
+    $('#modGrid').innerHTML = list.map(m => {
+      const on = state[m.id].on;
+      const hasSet = m.set && m.set.length;
+      return '<div class="modcard ' + (on ? 'on' : '') + ' ' + (openSets.has(m.id) ? 'open' : '') + '" data-id="' + m.id + '">' +
+        '<div class="mc-t">' +
+          '<div class="mc-n">' + m.n + '<span class="mc-c">' + m.c + '</span>' +
+            (hasSet ? '<span class="gear" data-gear="' + m.id + '" title="Settings">⚙</span>' : '') +
+          '</div>' +
+          '<div class="mc-d">' + m.d + '</div>' +
+          (hasSet ? '<div class="mc-set">' + m.set.map(sd => setRowHTML(m.id, sd)).join('') + '</div>' : '') +
+        '</div>' +
+        '<span class="sw"></span>' +
+      '</div>';
+    }).join('');
+    refreshStats();
+  }
+
+  function refreshStats(){
+    const on = MODULES.filter(m => state[m.id].on);
+    let custom = 0;
+    MODULES.forEach(m => {
+      const d = defaults(m);
+      Object.keys(state[m.id].v).forEach(k => { if (String(state[m.id].v[k]) !== String(d[k])) custom++; });
+    });
+    const cats = new Set(on.map(m => m.c));
+    $('#mCount').textContent = on.length;
+    $('#mCountLabel').textContent = on.length === 1 ? 'Enabled module' : 'Enabled modules';
+    $('#mVals').textContent = custom;
+    $('#mCats').textContent = cats.size;
+    const code = makeCode();
+    $('#cfgCode').value = code;
+    $('#mLen').textContent = code.length;
+    const hudOn = hudBridge.ready ? hudBridge.els.filter(e => hudBridge.state[e.id].on).length : 0;
+    $('#cfgInfo').textContent = on.length + ' modules on · ' + hudOn + ' HUD elements · ' + custom +
+      ' custom values · schema 1 · ' + code.length + ' chars';
+    paintOverlay(on);
+    persistModules();
+    paintSavedIfNeeded();
+  }
+
+  function paintOverlay(on){
+    const list = on || MODULES.filter(m => state[m.id].on);
+    const has = id => state[id] && state[id].on;
+    $('#ovBox').style.opacity = has('esp') ? 1 : 0;
+    $('#ovTracer').style.opacity = has('tracers') ? .85 : 0;
+    $('#ovTag').style.opacity = has('nametags') ? 1 : 0;
+    $('#ovList').style.opacity = has('arraylist') ? 1 : 0;
+    $('#ovEnt').style.background = has('chams') ? '#12a150' : '#5c7391';
+    $('#ov').style.filter = has('fullbright') ? 'brightness(1.16)' : 'none';
+    /* slider değerleri görselde de hissedilsin */
+    const espRange = state.esp.v.range || 48;
+    const boxSize = 30 + (espRange / 96) * 40;
+    $('#ovBox').style.width = boxSize + 'px';
+    $('#ovBox').style.height = (boxSize * 1.9) + 'px';
+    const tagScale = (state.nametags.v.scale || 100) / 100;
+    $('#ovTag').style.transform = 'translateX(-50%) scale(' + tagScale + ')';
+    $('#ovTag').textContent = 'Player · ' + (espRange / 4).toFixed(1) + 'm';
+    $('#ovList').innerHTML = list.slice(0, 7).map(m => '<div>' + m.n + '</div>').join('') +
+      (list.length > 7 ? '<div>…</div>' : '');
+  }
+
+  function paintSavedIfNeeded(){ /* saved listesi ayrı yönetiliyor */ }
+
+  function renderAll(){ renderGrid(); }
+
+  /* --- events: grid --- */
+  const grid = $('#modGrid');
+  grid.addEventListener('click', e => {
+    const gear = e.target.closest('[data-gear]');
+    if (gear){
+      e.stopPropagation();
+      const id = gear.dataset.gear;
+      openSets.has(id) ? openSets.delete(id) : openSets.add(id);
+      const card = grid.querySelector('.modcard[data-id="' + id + '"]');
+      if (card) card.classList.toggle('open', openSets.has(id));
+      return;
+    }
+    const cyc = e.target.closest('[data-cyc]');
+    if (cyc){
+      e.stopPropagation();
+      const bits = cyc.dataset.cyc.split(':');
+      const sd = setDef(bits[0], bits[1]);
+      const i = sd.opts.indexOf(state[bits[0]].v[bits[1]]);
+      state[bits[0]].v[bits[1]] = sd.opts[(i + 1) % sd.opts.length];
+      cyc.textContent = state[bits[0]].v[bits[1]];
+      refreshStats();
+      return;
+    }
+    if (e.target.closest('.mc-set')) return;
+    const card = e.target.closest('.modcard');
+    if (!card) return;
+    const id = card.dataset.id;
+    state[id].on = !state[id].on;
+    card.classList.toggle('on', state[id].on);
+    refreshStats();
+  });
+
+  grid.addEventListener('input', e => {
+    const rng = e.target.closest('[data-rng]');
+    if (!rng) return;
+    const bits = rng.dataset.rng.split(':');
+    const sd = setDef(bits[0], bits[1]);
+    state[bits[0]].v[bits[1]] = parseFloat(rng.value);
+    const lab = grid.querySelector('[data-val="' + bits[0] + ':' + bits[1] + '"]');
+    if (lab) lab.textContent = rng.value + (sd.u || '');
+    refreshStats();
+  });
+
+  const search = $('#modSearch');
+  search.addEventListener('input', () => { query = search.value; renderGrid(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)){
+      e.preventDefault(); search.focus(); search.select();
+    }
+  });
+
+  $('#resetMods').addEventListener('click', () => {
+    MODULES.forEach(m => { state[m.id].on = !!m.on; state[m.id].v = defaults(m); });
+    query = ''; search.value = ''; activeCat = 'All'; openSets.clear();
+    renderChips(); renderGrid();
+    toast('Everything reset to defaults');
+  });
+
+  /* --- presets + saved --- */
+  $('#presets').innerHTML = Object.keys(PRESETS).map(p => '<button class="preset" data-preset="' + p + '">' + p + '</button>').join('');
+  $$('#presets .preset').forEach(b => b.addEventListener('click', () => applyPreset(b.dataset.preset)));
+
+  $('#cfgName').addEventListener('input', () => { refreshStats(); });
+  $('#saveCfg').addEventListener('click', () => {
+    const name = ($('#cfgName').value || '').trim();
+    if (!name){ toast('Give the config a name first'); $('#cfgName').focus(); return; }
+    const list = savedCfgs().filter(c => c.name !== name);
+    list.unshift({ name:name, code:makeCode(), ts:Date.now() });
+    LS.set('coxe-saved-cfgs', list.slice(0, 12));
+    $('#cfgName').value = '';
+    paintSaved();
+    toast('Saved “' + name + '”');
+  });
+
+  /* --- copy / share / import --- */
+  async function copyText(text, okMsg){
+    try { await navigator.clipboard.writeText(text); toast(okMsg); }
+    catch(e){
+      const tmp = document.createElement('textarea');
+      tmp.value = text; document.body.appendChild(tmp); tmp.select();
+      try { document.execCommand('copy'); toast(okMsg); } catch(err){ toast('Copy failed — select the code manually'); }
+      tmp.remove();
+    }
+  }
+  $('#copyCfg').addEventListener('click', () => copyText(makeCode(), 'Config code copied'));
+  $('#copyLink').addEventListener('click', () => {
+    const url = location.origin + location.pathname + '?cfg=' + encodeURIComponent(makeCode());
+    copyText(url, 'Share link copied — it opens with your config');
+  });
+  $('#openImport').addEventListener('click', () => {
+    const box = $('#importBox');
+    box.hidden = !box.hidden;
+    if (!box.hidden) $('#importInput').focus();
+  });
+  $('#cancelImport').addEventListener('click', () => { $('#importBox').hidden = true; $('#importDiff').textContent = ''; });
+  $('#applyImport').addEventListener('click', () => {
+    const parsed = parseCode($('#importInput').value);
+    if (!parsed){ $('#importDiff').textContent = 'That code could not be read.'; return; }
+    if (parsed.__err){ $('#importDiff').textContent = parsed.__err; return; }
+    const r = applyParsed(parsed, false);
+    if (!r){ $('#importDiff').textContent = 'That code could not be read.'; return; }
+    const scopeTxt = r.scope === '*' ? 'complete profile'
+      : r.scope ? r.scope + ' only'
+      : 'modules only';
+    $('#importDiff').textContent = r.turnedOn + ' on · ' + r.turnedOff + ' off · ' + r.vals +
+      ' values' + (r.hud ? ' · ' + r.hud + ' HUD fields' : '') + ' · ' + scopeTxt;
+    refreshStats();
+    toast('Config applied' + (r.name ? ' · “' + r.name + '”' : ''));
+  });
+
+  /* hero stats */
+  $('#statModules').textContent = MODULES.length;
+  $('#statCats').textContent = CATS.length - 1;
+
+  renderChips();
+  renderGrid();
+  paintSaved();
+
+  /* ============================================================
+     3. HUD EDITOR v2 (add/remove, %, scale, colour, undo, codes)
+     ============================================================ */
+  const HUD_ELS = [
+    { id:'fps',      label:'FPS Counter',  text:'FPS <b>240</b>',           x:3,  y:5,  scale:100, col:'#ffffff', on:true  },
+    { id:'coords',   label:'Coordinates',  text:'XYZ 128 / 64 / -512',      x:3,  y:16, scale:100, col:'#ffffff', on:true  },
+    { id:'alist',    label:'Arraylist',    text:'KillAura<br>Speed<br>ESP', x:86, y:5,  scale:100, col:'#5b8cff', on:true  },
+    { id:'ping',     label:'Ping',         text:'Ping 14ms',                x:86, y:82, scale:100, col:'#3ecf8e', on:true  },
+    { id:'keys',     label:'Keystrokes',   text:'W A S D · Space',          x:3,  y:84, scale:100, col:'#ffffff', on:false },
+    { id:'watermark',label:'Watermark',    text:'COXE v3.6',                x:44, y:5,  scale:100, col:'#ffd166', on:false },
+    { id:'armor',    label:'Armor Status', text:'Helm · Chest · Legs',                 x:44, y:84, scale:100, col:'#ffffff', on:false },
+    { id:'potions',  label:'Potion Status',text:'Speed II · 1:20',          x:3,  y:28, scale:100, col:'#3ecf8e', on:false },
+    { id:'combo',    label:'Combo',        text:'Combo <b>4</b>',           x:70, y:28, scale:100, col:'#ff7b7b', on:false },
+    { id:'cps',      label:'CPS',          text:'CPS 12',                   x:70, y:40, scale:100, col:'#ffffff', on:false }
+  ];
+  const HUD_KEY = 'coxe-hud-v2';
+  const hud = {};
+  HUD_ELS.forEach(e => hud[e.id] = { on:e.on, x:e.x, y:e.y, scale:e.scale, col:e.col });
+
+  (function restoreHud(){
+    const saved = LS.get(HUD_KEY, null);
+    if (!saved) return;
+    HUD_ELS.forEach(e => {
+      const sv = saved[e.id];
+      if (!sv) return;
+      hud[e.id].on = !!sv.on;
+      if (typeof sv.x === 'number') hud[e.id].x = clamp(sv.x, 0, 100);
+      if (typeof sv.y === 'number') hud[e.id].y = clamp(sv.y, 0, 100);
+      if (typeof sv.scale === 'number') hud[e.id].scale = clamp(sv.scale, 70, 150);
+      if (typeof sv.col === 'string') hud[e.id].col = sv.col;
+    });
+  })();
+
+  const stage = $('#hudStage');
+  const history = [];
+  let selected = null, snapOn = false, dragState = null;
+
+  function snapshot(){
+    history.push(JSON.stringify(hud));
+    if (history.length > 40) history.shift();
+  }
+  function persistHud(){
+    LS.set(HUD_KEY, hud);
+    updateHudCode();
+    if (typeof refreshStats === 'function' && hudBridge.ready) refreshStats();
+  }
+
+  function elW(id){
+    const el = stage.querySelector('.hudel2[data-el="' + id + '"]');
+    if (!el) return 0;
+    return el.offsetWidth * (hud[id].scale / 100);
+  }
+  function fitX(id){
+    const w = elW(id) / (stage.clientWidth || 1) * 100;
+    const max = Math.max(0, 100 - w);
+    if (hud[id].x > max) hud[id].x = Math.round(max * 10) / 10;
+    return max;
+  }
+  function renderStage(){
+    stage.querySelectorAll('.hudel2').forEach(n => n.remove());
+    HUD_ELS.forEach(e => {
+      const st = hud[e.id];
+      if (!st.on) return;
+      const el = document.createElement('div');
+      el.className = 'hudel2' + (selected === e.id ? ' sel' : '');
+      el.dataset.el = e.id;
+      el.style.left = st.x + '%';
+      el.style.top = st.y + '%';
+      el.style.color = st.col;
+      el.style.transform = 'scale(' + (st.scale / 100) + ')';
+      el.style.transformOrigin = 'top left';
+      el.innerHTML = e.text;
+      stage.appendChild(el);
+    });
+    /* keep every element fully inside the preview */
+    HUD_ELS.forEach(e => {
+      if (!hud[e.id].on) return;
+      const el = stage.querySelector('.hudel2[data-el="' + e.id + '"]');
+      fitX(e.id);
+      if (el) el.style.left = hud[e.id].x + '%';
+    });
+  }
+
+  function renderElList(){
+    $('#elList').innerHTML = HUD_ELS.map(e => {
+      const st = hud[e.id];
+      return '<div class="elrow ' + (st.on ? 'on' : '') + '" data-el="' + e.id + '">' +
+        '<span class="d"></span><span class="nm">' + e.label + '</span>' +
+        '<span class="st">' + (st.on ? 'ON' : 'OFF') + '</span></div>';
+    }).join('');
+  }
+
+  function renderSel(){
+    const id = selected;
+    const has = !!(id && hud[id]);
+    $('#selName').textContent = has ? HUD_ELS.find(e => e.id === id).label : '—';
+    $('#selPanel').style.opacity = has ? 1 : .45;
+    if (!has){ $('#selXv').textContent = '—'; $('#selYv').textContent = '—'; $('#selScalev').textContent = '—'; }
+    $('#selPanel').style.pointerEvents = has ? 'auto' : 'none';
+    if (!has) return;
+    const st = hud[id];
+    $('#selX').value = st.x; $('#selXv').textContent = st.x.toFixed(1) + '%';
+    $('#selY').value = st.y; $('#selYv').textContent = st.y.toFixed(1) + '%';
+    $('#selScale').value = st.scale; $('#selScalev').textContent = st.scale + '%';
+    $$('#selPanel .swatch2').forEach(sw => sw.classList.toggle('on', sw.dataset.col === st.col));
+    $$('.hudel2').forEach(el => el.classList.toggle('sel', el.dataset.el === id));
+  }
+
+  function updateHudCode(){
+    let code = '';
+    try { code = nativeCode('hud', cfgName(), hudFields()); } catch(e){ code = ''; }
+    $('#hudCode').value = code;
+  }
+
+  function renderAllHud(){ renderStage(); renderElList(); renderSel(); persistHud(); }
+  hudBridge.ready = true; hudBridge.els = HUD_ELS; hudBridge.state = hud;
+
+  /* --- element list: toggle on/off --- */
+  $('#elList').addEventListener('click', e => {
+    const row = e.target.closest('.elrow');
+    if (!row) return;
+    snapshot();
+    const id = row.dataset.el;
+    hud[id].on = !hud[id].on;
+    if (hud[id].on) selected = id; else if (selected === id) selected = null;
+    renderAllHud();
+    $('#hudInfo').textContent = (hud[id].on ? 'Added ' : 'Removed ') + HUD_ELS.find(x => x.id === id).label + '.';
+  });
+
+  /* --- drag --- */
+  stage.addEventListener('pointerdown', e => {
+    const el = e.target.closest('.hudel2');
+    if (!el) return;
+    const box = stage.getBoundingClientRect();
+    const elBox = el.getBoundingClientRect();
+    dragState = { id: el.dataset.el, dx: e.clientX - elBox.left, dy: e.clientY - elBox.top, box, moved: false };
+    selected = el.dataset.el;
+    snapshot();
+    renderSel();
+    el.setPointerCapture && el.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+
+  document.addEventListener('pointermove', e => {
+    if (!dragState) return;
+    const { box, dx, dy } = dragState;
+    const el = stage.querySelector('.hudel2[data-el="' + dragState.id + '"]');
+    if (!el) return;
+    const elW = el.offsetWidth * (hud[dragState.id].scale / 100), elH = el.offsetHeight * (hud[dragState.id].scale / 100);
+    let px = e.clientX - box.left - dx;
+    let py = e.clientY - box.top - dy;
+    px = clamp(px, 0, box.width - elW);
+    py = clamp(py, 0, box.height - elH);
+
+    let xPct = (px / box.width) * 100;
+    let yPct = (py / box.height) * 100;
+    if (snapOn){ xPct = Math.round(xPct / 2) * 2; yPct = Math.round(yPct / 2) * 2; }
+
+    /* alignment guides near the middle */
+    $('#guideV').classList.toggle('on', Math.abs(xPct + (elW / box.width) * 50 - 50) < 2.5);
+    $('#guideH').classList.toggle('on', Math.abs(yPct + (elH / box.height) * 50 - 50) < 2.5);
+
+    hud[dragState.id].x = clamp(xPct, 0, 100);
+    hud[dragState.id].y = clamp(yPct, 0, 100);
+    el.style.left = hud[dragState.id].x + '%';
+    el.style.top = hud[dragState.id].y + '%';
+    dragState.moved = true;
+    renderSel();
+  });
+
+  document.addEventListener('pointerup', () => {
+    if (!dragState) return;
+    $('#guideV').classList.remove('on');
+    $('#guideH').classList.remove('on');
+    if (dragState.moved){
+      persistHud();
+      $('#hudInfo').textContent = 'Placed ' + HUD_ELS.find(e => e.id === dragState.id).label +
+        ' at ' + hud[dragState.id].x.toFixed(1) + '% / ' + hud[dragState.id].y.toFixed(1) + '%.';
+    }
+    dragState = null;
+  });
+
+  /* --- selected element controls --- */
+  $('#selX').addEventListener('input', e => {
+    if (!selected) return;
+    hud[selected].x = parseFloat(e.target.value);
+    fitX(selected);
+    e.target.value = hud[selected].x;
+    $('#selXv').textContent = hud[selected].x.toFixed(1) + '%';
+    const el = stage.querySelector('.hudel2[data-el="' + selected + '"]');
+    if (el) el.style.left = hud[selected].x + '%';
+    updateHudCode();
+  });
+  $('#selY').addEventListener('input', e => {
+    if (!selected) return;
+    hud[selected].y = parseFloat(e.target.value);
+    $('#selYv').textContent = hud[selected].y.toFixed(1) + '%';
+    const el = stage.querySelector('.hudel2[data-el="' + selected + '"]');
+    if (el) el.style.top = hud[selected].y + '%';
+    updateHudCode();
+  });
+  $('#selScale').addEventListener('input', e => {
+    if (!selected) return;
+    hud[selected].scale = parseInt(e.target.value, 10);
+    $('#selScalev').textContent = hud[selected].scale + '%';
+    const el = stage.querySelector('.hudel2[data-el="' + selected + '"]');
+    if (el) el.style.transform = 'scale(' + hud[selected].scale / 100 + ')';
+    updateHudCode();
+  });
+  $('#selPanel').addEventListener('click', e => {
+    const sw = e.target.closest('.swatch2');
+    if (!sw || !selected) return;
+    hud[selected].col = sw.dataset.col;
+    renderAllHud();
+  });
+  $('#selHide').addEventListener('click', () => {
+    if (!selected) return;
+    snapshot();
+    hud[selected].on = false;
+    $('#hudInfo').textContent = 'Hidden ' + HUD_ELS.find(e => e.id === selected).label + '.';
+    selected = null;
+    renderAllHud();
+  });
+  $('#selCenter').addEventListener('click', () => {
+    if (!selected) return;
+    snapshot();
+    hud[selected].x = 45; hud[selected].y = 45;
+    renderAllHud();
+    toast('Centred');
+  });
+
+  /* --- tools --- */
+  $('#hudBgDay').addEventListener('click', () => { stage.className = 'hudstage2 day'; });
+  $('#hudBgNight').addEventListener('click', () => { stage.className = 'hudstage2 night'; });
+  $('#hudBgNether').addEventListener('click', () => { stage.className = 'hudstage2 nether'; });
+
+  $('#hudSnap').addEventListener('click', () => {
+    snapOn = !snapOn;
+    $('#hudSnap').textContent = 'Grid snap: ' + (snapOn ? 'on' : 'off');
+    $('#hudSnap').setAttribute('aria-pressed', snapOn ? 'true' : 'false');
+    $('#hudSnap').style.borderColor = snapOn ? 'var(--accent)' : '';
+    $('#hudSnap').style.color = snapOn ? 'var(--accent)' : '';
+  });
+
+  $('#hudUndo').addEventListener('click', () => {
+    if (!history.length){ toast('Nothing to undo'); return; }
+    const prev = JSON.parse(history.pop());
+    Object.keys(prev).forEach(k => { if (hud[k]) Object.assign(hud[k], prev[k]); });
+    renderAllHud();
+    toast('Undone');
+  });
+
+  $('#hudReset').addEventListener('click', () => {
+    snapshot();
+    HUD_ELS.forEach(e => Object.assign(hud[e.id], { on:e.on, x:e.x, y:e.y, scale:e.scale, col:e.col }));
+    selected = null;
+    renderAllHud();
+    toast('Layout reset');
+  });
+
+  $('#hudCopy').addEventListener('click', () => copyText($('#hudCode').value, 'Layout code copied'));
+  $('#hudImportBtn').addEventListener('click', () => {
+    const box = $('#hudImportBox');
+    box.hidden = !box.hidden;
+    if (!box.hidden) $('#hudImportInput').focus();
+  });
+  $('#hudCancelImport').addEventListener('click', () => { $('#hudImportBox').hidden = true; });
+  $('#hudApplyImport').addEventListener('click', () => {
+    const raw = ($('#hudImportInput').value || '').trim();
+
+    /* legacy HX1 layouts still open */
+    const legacy = raw.match(/(HX1-[A-Za-z0-9_-]+)/);
+    if (legacy){
+      try {
+        const data = JSON.parse(unb64url(legacy[1].slice(4)));
+        snapshot();
+        HUD_ELS.forEach(e => {
+          const v = data[e.id];
+          if (!Array.isArray(v)) return;
+          hud[e.id].on = !!v[0];
+          hud[e.id].x = clamp(+v[1] || 0, 0, 100);
+          hud[e.id].y = clamp(+v[2] || 0, 0, 100);
+          hud[e.id].scale = clamp(+v[3] || 100, 70, 150);
+          if (typeof v[4] === 'string') hud[e.id].col = v[4];
+        });
+        renderAllHud();
+        $('#hudImportBox').hidden = true;
+        toast('Layout imported');
+      } catch(err){ toast('That layout code could not be read'); }
+      return;
+    }
+
+    const parsed = parseCode(raw);
+    if (!parsed || parsed.__err){ toast(parsed && parsed.__err ? parsed.__err : 'That code could not be read'); return; }
+    const hasHud = Object.keys(parsed.fields || {}).some(k => k.indexOf('hud.') === 0);
+    if (!hasHud){ toast('That code carries no HUD layout'); return; }
+    snapshot();
+    const r = applyUnified(parsed, false);
+    renderAllHud();
+    $('#hudImportBox').hidden = true;
+    toast('Layout imported · ' + r.hud + ' fields');
+  });
+
+  renderAllHud();
+  updateHudCode();
+
+  /* ============================================================
+     4. BUILD SWITCH + DOWNLOADS
+     ============================================================ */
+  const MOD_DATA = {
+    '1.21.11': { file:'coxe-mod.jar', game:'1.21.11', loader:'Fabric + Fabric API', java:'21+',
+                 dl:'Coxe Mod 1.21.11', note:'Drop it in <code>.minecraft/mods</code> and launch Fabric 1.21.11' },
+    '1.8.9':   { file:'coxe-mod-1.8.9.jar', game:'1.8.9', loader:'Forge 11.15.1.2318', java:'8+',
+                 dl:'Coxe Mod 1.8.9 Forge', note:'Drop it in <code>.minecraft/mods</code> and launch your Forge 1.8.9 profile' }
+  };
+  function pickVer(ver){
+    const d = MOD_DATA[ver]; if (!d) return;
+    $$('.pc-tabs button').forEach(b => {
+      const on = b.dataset.ver === ver;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    $('#cardVer').textContent = d.game;
+    $('#specGame').textContent = d.game;
+    $('#specLoader').textContent = d.loader;
+    $('#specJava').textContent = d.java;
+    $('#specFile').textContent = d.file;
+    $('#modNote').innerHTML = d.note;
+    const a = $('#modDl');
+    a.setAttribute('href', d.file);
+    a.setAttribute('download', '');
+    a.dataset.dl = d.dl;
+    $('#modDlText').textContent = 'Download ' + d.file;
+    LS.set('coxe-mod-ver', ver);
+    refreshOpts();
+  }
+  $$('.pc-tabs button').forEach(b => {
+    b.addEventListener('click', () => pickVer(b.dataset.ver));
+    b.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pickVer(b.dataset.ver); } });
+  });
+
+  const opts = Object.assign({ randName:true, randSize:false, mbMin:4, mbMax:9 }, LS.get('coxe-dl-opts', {}));
+  const hex = n => Array.from({length:n}, () => '0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+  function randomName(file){
+    const dot = file.lastIndexOf('.');
+    const base = dot > 0 ? file.slice(0, dot) : file;
+    const ext = dot > 0 ? file.slice(dot) : '';
+    return base + '-' + hex(6) + ext;
+  }
+  function randomMB(){
+    const lo = Math.min(opts.mbMin, opts.mbMax), hi = Math.max(opts.mbMin, opts.mbMax);
+    return Math.max(1, Math.round((lo + Math.random() * (hi - lo)) * 10) / 10);
+  }
+  const human = b => (b / 1048576).toFixed(1) + ' MB';
+
+  function refreshOpts(){
+    $$('.tg').forEach(el => {
+      const on = !!opts[el.dataset.opt];
+      el.classList.toggle('on', on);
+      el.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+    $('#mbRow').hidden = !opts.randSize;
+    $('#mbMin').value = opts.mbMin;
+    $('#mbMax').value = opts.mbMax;
+    const target = ($('#modDl').getAttribute('href') || 'coxe-mod.jar').split('/').pop();
+    $('#nextName').textContent = opts.randName ? randomName(target) : target;
+    LS.set('coxe-dl-opts', opts);
+  }
+  $$('.tg').forEach(el => {
+    const flip = () => { opts[el.dataset.opt] = !opts[el.dataset.opt]; refreshOpts(); };
+    el.addEventListener('click', flip);
+    el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); flip(); } });
+  });
+  ['mbMin','mbMax'].forEach(id => {
+    $('#' + id).addEventListener('input', e => {
+      const v = parseFloat(e.target.value);
+      if (!isNaN(v) && v >= 1 && v <= 500) opts[id === 'mbMin' ? 'mbMin' : 'mbMax'] = v;
+      refreshOpts();
+    });
+  });
+
+  async function downloadFile(href, originalName){
+    const finalName = opts.randName ? randomName(originalName) : originalName;
+    let blob = null;
+    try {
+      const res = await fetch(href, { cache:'no-store' });
+      if (res.ok){
+        const orig = await res.arrayBuffer();
+        let buf = new Uint8Array(orig);
+        if (opts.randSize){
+          const target = Math.round(randomMB() * 1048576);
+          if (target > buf.byteLength){ const padded = new Uint8Array(target); padded.set(buf); buf = padded; }
+        }
+        blob = new Blob([buf], { type:'application/octet-stream' });
+      }
+    } catch(err){ /* file:// gibi durumlarda düz indirmeye düşer */ }
+
+    const a = document.createElement('a');
+    a.download = finalName;
+    if (blob){
+      const url = URL.createObjectURL(blob);
+      a.href = url; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      toast(finalName + ' · ' + human(blob.size));
+    } else {
+      a.href = href; document.body.appendChild(a); a.click(); a.remove();
+      toast(finalName);
+    }
+  }
+  $$('a.magnet, .fcol a[download]').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href') || '';
+      if (!href || href.startsWith('#') || /^https?:/i.test(href)) return;
+      e.preventDefault();
+      downloadFile(href, href.split('/').pop());
+    });
+  });
+
+  /* ============================================================
+     5. KEYBIND CAPTURE
+     ============================================================ */
+  const prettyKey = code => {
+    if (code === 'ShiftRight') return 'Right Shift';
+    if (code === 'ShiftLeft') return 'Left Shift';
+    if (code === 'ControlLeft') return 'Left Ctrl';
+    if (code === 'ControlRight') return 'Right Ctrl';
+    if (code === 'Space') return 'Space';
+    if (code === 'Escape') return 'Esc';
+    return code.replace('Key','').replace('Digit','').replace('Arrow','');
+  };
+  guiVk = LS.get('coxe-guikey-vk', 161);
+  guiKey = labelFromVk(guiVk);
+  function paintKey(){
+    $('#keyLabel').textContent = guiKey;
+    $('#keyEcho').textContent = guiKey;
+    $('#specKey').textContent = guiKey;
+  }
+  paintKey();
+  const cap = $('#keyCapture');
+  cap.addEventListener('click', () => {
+    cap.classList.add('listening');
+    $('#keyLabel').textContent = 'Press a key…';
+    const handler = e => {
+      e.preventDefault(); e.stopPropagation();
+      guiKey = prettyKey(e.code);
+      guiVk = vkFromLabel(guiKey) || (e.keyCode || 0);
+      LS.set('coxe-guikey', guiKey);
+      LS.set('coxe-guikey-vk', guiVk);
+      cap.classList.remove('listening');
+      paintKey();
+      refreshStats();
+      toast('GUI key set to ' + guiKey);
+      window.removeEventListener('keydown', handler, true);
+    };
+    window.addEventListener('keydown', handler, true);
+  });
+  $('#keyReset').addEventListener('click', () => {
+    guiKey = 'Right Shift'; guiVk = 161;
+    LS.set('coxe-guikey', guiKey); LS.set('coxe-guikey-vk', 161);
+    paintKey(); refreshStats(); toast('GUI key reset');
+  });
+
+  /* ============================================================
+     6. SETUP TABS
+     ============================================================ */
+  const OS = {
+    win: [
+      { h:'Get the right file', p:'Forge 1.8.9 → <code>coxe-mod-1.8.9.jar</code>. Fabric 1.21.11 → <code>coxe-mod.jar</code>. Anything 1.20 – 1.21.11 or CraftRise → <code>coxe-external.exe</code>.' },
+      { h:'Put it in place', p:'Mod: drop the jar into <code>%appdata%\\.minecraft\\mods</code> and start your Forge or Fabric profile. External: just run the exe.' },
+      { h:'Press your GUI key', p:'In game, open the ClickGUI and toggle what you need. Right Shift is the default.' }
+    ],
+    mac: [
+      { h:'Get the right file', p:'macOS uses the Mod: <code>coxe-mod.jar</code> for Fabric 1.21.11 or <code>coxe-mod-1.8.9.jar</code> for Forge 1.8.9. The External is Windows only.' },
+      { h:'Put it in place', p:'Drop the jar into <code>~/Library/Application Support/minecraft/mods</code> (or your launcher profile folder), then start the matching profile.' },
+      { h:'Press your GUI key', p:'Open the ClickGUI in game and configure modules. Right Shift is the default.' }
+    ],
+    linux: [
+      { h:'Get the right file', p:'Linux uses the Mod: <code>coxe-mod.jar</code> (Fabric 1.21.11) or <code>coxe-mod-1.8.9.jar</code> (Forge 1.8.9).' },
+      { h:'Put it in place', p:'Copy the jar into <code>~/.minecraft/mods</code>, then launch the matching Forge or Fabric profile.' },
+      { h:'Press your GUI key', p:'Open the ClickGUI and toggle modules. Right Shift is the default.' }
+    ]
+  };
+  function renderOS(os){
+    $('#osSteps').innerHTML = OS[os].map(s => '<div class="step"><h4>' + s.h + '</h4><p>' + s.p + '</p></div>').join('');
+    $$('#osTabs button').forEach(b => b.classList.toggle('on', b.dataset.os === os));
+    LS.set('coxe-os', os);
+  }
+  $$('#osTabs button').forEach(b => b.addEventListener('click', () => renderOS(b.dataset.os)));
+  renderOS(LS.get('coxe-os', 'win'));
+
+  /* ============================================================
+     7. FAQ / TOAST / NAV / SCROLL
+     ============================================================ */
+  $$('.faq > button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const wasOpen = item.classList.contains('open');
+      $$('.faq').forEach(f => f.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  let toastTimer;
+  function toast(text){
+    $('#toastTxt').textContent = text;
+    $('#toast').classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => $('#toast').classList.remove('show'), 3000);
+  }
+
+  $('#burger').addEventListener('click', () => {
+    const n = $('#nav');
+    const open = n.style.display === 'flex';
+    n.style.display = open ? '' : 'flex';
+    n.style.position = 'absolute'; n.style.top = '64px'; n.style.left = '0'; n.style.right = '0';
+    n.style.flexDirection = 'column'; n.style.background = 'var(--bg)';
+    n.style.borderBottom = '1px solid var(--line)'; n.style.padding = '10px 18px';
+    n.style.gap = '2px';
+  });
+
+  const sections = $$('section[id], div.hero');
+  const navLinks = $$('#nav a');
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting){
+        const id = en.target.id;
+        navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin:'-40% 0px -55% 0px' });
+  sections.forEach(s => { if (s.id) spy.observe(s); });
+
+  const toTop = $('#toTop');
+  addEventListener('scroll', () => { toTop.classList.toggle('show', scrollY > 500); }, { passive:true });
+  toTop.addEventListener('click', () => scrollTo({ top:0, behavior:'smooth' }));
+
+  const io = new IntersectionObserver(es => {
+    es.forEach(en => { if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold:.1, rootMargin:'0px 0px -30px 0px' });
+  $$('.rv').forEach(el => io.observe(el));
+
+  /* ============================================================
+     8. BOOT
+     ============================================================ */
+  pickVer(MOD_DATA[LS.get('coxe-mod-ver', '1.21.11')] ? LS.get('coxe-mod-ver', '1.21.11') : '1.21.11');
+  refreshOpts();
+  paintOverlay();
+
+  /* shared ?cfg= link */
+  if (/[?&]cfg=/.test(location.search)){
+    const linkCfg = parseCode(location.search);
+    if (linkCfg && applyParsed(linkCfg, false)){
+      const n = MODULES.filter(m => state[m.id].on).length;
+      setTimeout(() => toast('Config loaded from link · ' + n + (n === 1 ? ' module' : ' modules') + ' on'), 600);
+    } else {
+      setTimeout(() => toast('That config link could not be read'), 600);
+    }
+  }
+})();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a51a08d8c8afe33f',t:'MTc5MzE5MTQ5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
